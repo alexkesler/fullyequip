@@ -1,5 +1,7 @@
 package org.kesler.fullyequip.gui.dialog;
 
+import org.kesler.fullyequip.gui.dialog.item.AbstractItemDialog;
+import org.kesler.fullyequip.gui.dialog.item.ItemDialogFactory;
 import org.kesler.fullyequip.gui.dict.DictEntity;
 import org.kesler.fullyequip.gui.util.InfoDialog;
 import org.kesler.fullyequip.gui.util.ProcessDialog;
@@ -9,6 +11,10 @@ import org.kesler.fullyequip.logic.model.ModelStateListener;
 
 import javax.swing.*;
 
+/**
+ * Контроллер для управления диалогом справочника
+ * @param <T>
+ */
 public class ListDialogController<T extends DictEntity> implements ModelStateListener {
 
     private Class<T> type;
@@ -100,7 +106,7 @@ public class ListDialogController<T extends DictEntity> implements ModelStateLis
 
 	public boolean openAddItemDialog() {
 		boolean result = false;
-		AbstractItemDialog itemDialog = DialogFactory.createItemDialog(dialog,type);
+		AbstractItemDialog itemDialog = ItemDialogFactory.createItemDialog(dialog, type);
 		itemDialog.setVisible(true);
 
 		if (itemDialog.getResult() == AbstractItemDialog.OK) {
@@ -122,7 +128,7 @@ public class ListDialogController<T extends DictEntity> implements ModelStateLis
 
 		boolean result = false;
 		T item = model.getAllItems().get(index);
-		AbstractItemDialog itemDialog = DialogFactory.createItemDialog(dialog, item);
+		AbstractItemDialog itemDialog = ItemDialogFactory.createItemDialog(dialog, item);
 		itemDialog.setVisible(true);
 
 		if (itemDialog.getResult() == AbstractItemDialog.OK) {

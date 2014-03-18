@@ -1,7 +1,6 @@
 package org.kesler.fullyequip.gui.dialog.item;
 
 import net.miginfocom.swing.MigLayout;
-import org.kesler.fullyequip.gui.dialog.AbstractItemDialog;
 import org.kesler.fullyequip.logic.AuctionType;
 
 import javax.swing.*;

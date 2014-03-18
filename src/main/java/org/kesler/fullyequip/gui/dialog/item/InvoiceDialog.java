@@ -1,10 +1,8 @@
 package org.kesler.fullyequip.gui.dialog.item;
 
 import com.alee.extended.date.WebDateField;
-import com.alee.extended.label.WebMultiLineLabel;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
-import org.kesler.fullyequip.gui.dialog.AbstractItemDialog;
 import org.kesler.fullyequip.logic.Contract;
 import org.kesler.fullyequip.logic.Invoice;
 

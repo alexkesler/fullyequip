@@ -2,7 +2,6 @@ package org.kesler.fullyequip.gui.dialog.item;
 
 import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
-import org.kesler.fullyequip.gui.dialog.AbstractItemDialog;
 import org.kesler.fullyequip.gui.dialog.ListDialogController;
 import org.kesler.fullyequip.logic.Auction;
 import org.kesler.fullyequip.logic.Contract;

@@ -54,7 +54,7 @@ public class Unit extends DictEntity{
 	private Place place;
 
     @ManyToOne
-    @JoinColumn(name="StateID", nullable = false)
+    @JoinColumn(name="StateID")
     private UnitState state;
 
     @OneToMany(mappedBy = "unit", fetch = FetchType.EAGER, orphanRemoval = true)
@@ -109,6 +109,9 @@ public class Unit extends DictEntity{
         move.setMoveDate(new Date());
         moves.add(move);
     }
+
+    public UnitState getState() {return state;}
+    public void setState(UnitState state) {this.state = state;}
 
     public List<UnitMove> getMoves() {return moves;}
     public void setMoves(List<UnitMove> moves) {this.moves = moves;}

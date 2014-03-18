@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.kesler.fullyequip.gui.dialog.AbstractItemDialog;
 import org.kesler.fullyequip.logic.UnitType;
 
 public class UnitTypeDialog extends AbstractItemDialog<UnitType> {

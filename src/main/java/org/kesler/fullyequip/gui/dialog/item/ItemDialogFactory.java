@@ -1,4 +1,4 @@
-package org.kesler.fullyequip.gui.dialog;
+package org.kesler.fullyequip.gui.dialog.item;
 
 import org.kesler.fullyequip.gui.dialog.item.*;
 import org.kesler.fullyequip.gui.dict.DictEntity;
@@ -9,10 +9,10 @@ import javax.swing.*;
 /**
  * Фабрика для создания диалогов сущностей
  */
-public class DialogFactory {
+public class ItemDialogFactory {
 
 
-    private DialogFactory() {}
+    private ItemDialogFactory() {}
 
     // создает диалог для создания
     public static AbstractItemDialog createItemDialog(JDialog parentDialog, Class<? extends DictEntity> type) {

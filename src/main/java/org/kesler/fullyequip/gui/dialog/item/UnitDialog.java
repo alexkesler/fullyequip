@@ -3,8 +3,6 @@ package org.kesler.fullyequip.gui.dialog.item;
 import com.alee.extended.panel.CollapsiblePaneAdapter;
 import com.alee.extended.panel.WebCollapsiblePane;
 import net.miginfocom.swing.MigLayout;
-import org.kesler.fullyequip.gui.dialog.AbstractDialog;
-import org.kesler.fullyequip.gui.dialog.AbstractItemDialog;
 import org.kesler.fullyequip.logic.*;
 import org.kesler.fullyequip.logic.model.DefaultModel;
 import org.kesler.fullyequip.logic.model.ModelState;
@@ -16,7 +14,6 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Диалог редактирования единицы оборудования
@@ -201,9 +198,9 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
 //        }
 
         String invNum = invNumTextField.getText();
-        Float price = ((Number)priceTextField.getValue()).floatValue();
+        Double price = ((Number)priceTextField.getValue()).doubleValue();
 
-        Integer quantity = ((Number)quantityTextField.getValue()).intValue();
+        Long quantity = ((Number)quantityTextField.getValue()).longValue();
 
         item.setType((UnitType)unitTypeComboBox.getSelectedItem());
         item.setName(unitName);

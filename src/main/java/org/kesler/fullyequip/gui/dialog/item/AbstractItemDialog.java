@@ -1,5 +1,6 @@
-package org.kesler.fullyequip.gui.dialog;
+package org.kesler.fullyequip.gui.dialog.item;
 
+import org.kesler.fullyequip.gui.dialog.AbstractDialog;
 import org.kesler.fullyequip.gui.dict.DictEntity;
 import org.kesler.fullyequip.util.ResourcesUtil;
 
@@ -13,7 +14,7 @@ import java.awt.event.ActionListener;
  * Диалог редактирования конкретного типа необходимо расширить из этого абстрактного диалога
  * @param <T> элемент справочника
  */
-public abstract class AbstractItemDialog<T extends DictEntity> extends AbstractDialog{
+public abstract class AbstractItemDialog<T extends DictEntity> extends AbstractDialog {
 
     protected T item;
 

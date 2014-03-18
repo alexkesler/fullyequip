@@ -6,6 +6,7 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.HibernateException;
 import java.util.Properties;
 
+import org.kesler.fullyequip.logic.UnitState;
 import org.kesler.fullyequip.util.OptionsUtil;
 
 public class HibernateUtil {
@@ -69,6 +70,7 @@ public class HibernateUtil {
 						.addAnnotatedClass(org.kesler.fullyequip.logic.Supplier.class)
 						.addAnnotatedClass(org.kesler.fullyequip.logic.Unit.class)
 						.addAnnotatedClass(org.kesler.fullyequip.logic.UnitType.class)
+                        .addAnnotatedClass(org.kesler.fullyequip.logic.UnitState.class)
                         .addAnnotatedClass(org.kesler.fullyequip.logic.UnitMove.class)
 						.setProperties(hibernateProperties);
 
