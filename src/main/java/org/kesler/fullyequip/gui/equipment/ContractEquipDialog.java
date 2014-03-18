@@ -2,17 +2,14 @@ package org.kesler.fullyequip.gui.equipment;
 
 import com.alee.extended.list.CheckBoxListModel;
 import com.alee.extended.list.WebCheckBoxList;
-import com.alee.laf.table.WebTable;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
-import org.kesler.fullyequip.gui.dialog.DefaultListDialogController;
-import org.kesler.fullyequip.gui.dialog.item.InvoiceDialog;
+import org.kesler.fullyequip.gui.dialog.ListDialogController;
 import org.kesler.fullyequip.gui.dialog.item.UnitDialog;
 import org.kesler.fullyequip.logic.Contract;
 import org.kesler.fullyequip.logic.Invoice;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
-import org.kesler.fullyequip.logic.model.DefaultModel;
 import org.kesler.fullyequip.util.ResourcesUtil;
 
 import javax.swing.*;
@@ -251,7 +248,7 @@ public class ContractEquipDialog extends AbstractDialog {
     }
 
     private void selectDefaultPlace() {
-        defaultPlace = DefaultListDialogController.create(Place.class,"Размещения").showSelectDialog(currentDialog);
+        defaultPlace = ListDialogController.create(Place.class, "Размещения").showSelectDialog(currentDialog);
         defaultPlaceLabel.setText(defaultPlace==null?"Не определено":defaultPlace.toString());
     }
 

@@ -43,6 +43,7 @@ public abstract class AbstractItemDialog<T extends DictEntity> extends AbstractD
         createGUI();
         loadGUIFromItem();
         setLocationRelativeTo(parentDialog);
+
     }
 
     /**
@@ -81,17 +82,38 @@ public abstract class AbstractItemDialog<T extends DictEntity> extends AbstractD
      */
     public T getItem() {return item;}
 
+    /**
+     * Абстрактный метод для создания новой сущности
+     */
     protected abstract void createNewItem();
 
+    /**
+     * Абстрактный метод для создания панели редактирования сущности
+     * @return панель для редактирования сущности
+     */
     protected abstract JPanel createItemPanel();
 
+    /**
+     * Абстрактный метод для загрузки содержимого GUI из сущности
+     */
     protected abstract void loadGUIFromItem();
 
+    /**
+     * Абстрактный метод для чтения сущности из GUI
+     * @return результат чтения (все необходимые поля заданы)
+     */
     protected abstract boolean readItemFromGUI();
 
+    /**
+     * Абстрактный метод для проверки того измемения сущности при редактировании
+     * @return результат проверки измемения сущности
+     */
     protected abstract boolean checkChanged();
 
 
+    /**
+     * Метод создания GUI
+     */
     protected void createGUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -137,10 +159,5 @@ public abstract class AbstractItemDialog<T extends DictEntity> extends AbstractD
         this.pack();
 
     }
-
-
-
-
-
 
 }

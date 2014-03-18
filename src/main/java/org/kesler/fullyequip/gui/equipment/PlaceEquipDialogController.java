@@ -1,6 +1,6 @@
 package org.kesler.fullyequip.gui.equipment;
 
-import org.kesler.fullyequip.gui.dialog.DefaultListDialogController;
+import org.kesler.fullyequip.gui.dialog.ListDialogController;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
 
@@ -72,7 +72,7 @@ public class PlaceEquipDialogController {
     Place selectPlace() {
         Place place = null;
 
-        place = DefaultListDialogController.create(Place.class,"Выберите размещение").showSelectDialog(dialog);
+        place = ListDialogController.create(Place.class, "Выберите размещение").showSelectDialog(dialog);
 
         return place;
 

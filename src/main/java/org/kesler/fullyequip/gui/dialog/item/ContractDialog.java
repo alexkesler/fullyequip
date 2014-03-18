@@ -1,11 +1,9 @@
 package org.kesler.fullyequip.gui.dialog.item;
 
 import com.alee.extended.date.WebDateField;
-import com.alee.extended.panel.WebCollapsiblePane;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractItemDialog;
-import org.kesler.fullyequip.gui.dialog.DefaultListDialogController;
-import org.kesler.fullyequip.gui.equipment.ContractEquipDialog;
+import org.kesler.fullyequip.gui.dialog.ListDialogController;
 import org.kesler.fullyequip.logic.Auction;
 import org.kesler.fullyequip.logic.Contract;
 import org.kesler.fullyequip.logic.Supplier;
@@ -61,7 +59,7 @@ public class ContractDialog extends AbstractItemDialog<Contract>{
         selectSupplierButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setSupplier(DefaultListDialogController.create(Supplier.class, "Поставщики").showSelectDialog(currentDialog));
+                setSupplier(ListDialogController.create(Supplier.class, "Поставщики").showSelectDialog(currentDialog));
             }
         });
 
@@ -101,7 +99,7 @@ public class ContractDialog extends AbstractItemDialog<Contract>{
         selectAuctionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setAuction(DefaultListDialogController.create(Auction.class, "Аукционы").showSelectDialog(currentDialog));
+                setAuction(ListDialogController.create(Auction.class, "Аукционы").showSelectDialog(currentDialog));
             }
         });
 

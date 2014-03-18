@@ -1,6 +1,6 @@
 package org.kesler.fullyequip.gui.moving;
 
-import org.kesler.fullyequip.gui.dialog.DefaultListDialogController;
+import org.kesler.fullyequip.gui.dialog.ListDialogController;
 import org.kesler.fullyequip.gui.equipment.PlaceEquipDialogController;
 import org.kesler.fullyequip.logic.Moving;
 import org.kesler.fullyequip.logic.Place;
@@ -38,7 +38,7 @@ public class MovingDialogController {
     Moving getMoving() {return moving;}
 
     boolean selectNewPlace() {
-        Place place = DefaultListDialogController.create(Place.class,"Выберите новое размещение").showSelectDialog(movingDialog);
+        Place place = ListDialogController.create(Place.class, "Выберите новое размещение").showSelectDialog(movingDialog);
         moving.setNewPlace(place);
         return true;
     }

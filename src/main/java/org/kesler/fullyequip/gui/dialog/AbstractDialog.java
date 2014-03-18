@@ -3,6 +3,9 @@ package org.kesler.fullyequip.gui.dialog;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+/**
+ * Абстрактный диалог поддерживающий управление результатом
+ */
 public abstract class AbstractDialog extends JDialog {
 
 	public static final int NONE = -1;
@@ -14,6 +17,10 @@ public abstract class AbstractDialog extends JDialog {
 	protected int result = NONE;
     protected boolean changed = false;
 
+    /**
+     * Возвращает результат диалога
+     * @return результат диалога
+     */
 	public int getResult() {
 		return result;
 	}
