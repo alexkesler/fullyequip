@@ -29,21 +29,29 @@ public abstract class AbstractDialog extends JDialog {
 
 	protected AbstractDialog(JDialog parentDialog, boolean modal) {
 		super(parentDialog, modal);
+        setLocale(parentDialog.getLocale());
+        getInputContext().selectInputMethod(parentDialog.getLocale());
 		currentDialog = this;
 	}
 
 	protected AbstractDialog(JFrame parentFrame, boolean modal) {
 		super(parentFrame, modal);
+        setLocale(parentFrame.getLocale());
+        getInputContext().selectInputMethod(parentFrame.getLocale());
 		currentDialog = this;
 	}
 
 	protected AbstractDialog(JDialog parentDialog, String name, boolean modal) {
 		super(parentDialog, name, modal);
+        setLocale(parentDialog.getLocale());
+        getInputContext().selectInputMethod(parentDialog.getLocale());
 		currentDialog = this;
 	}
 
 	protected AbstractDialog(JFrame parentFrame, String name, boolean modal) {
 		super(parentFrame, name, modal);
+        setLocale(parentFrame.getLocale());
+        getInputContext().selectInputMethod(parentFrame.getLocale());
 		currentDialog = this;
 	}
 
