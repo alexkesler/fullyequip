@@ -36,6 +36,11 @@ public class MainViewController {
         ListDialogController.create(UnitType.class, "Типы оборудования").showDialog(view);
     }
 
+
+    void showUnitStateListDialog() {
+        ListDialogController.create(UnitState.class,"Состояния оборудования").showDialog(view);
+    }
+
     public void showPlacesDialog() {
         ListDialogController.create(Place.class, "Места размещения").showDialog(view);
     }

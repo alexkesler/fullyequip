@@ -7,6 +7,9 @@ import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.*;
+
 /**
 * Накладная
 */
@@ -26,8 +29,11 @@ public class Invoice extends DictEntity{
 	private Contract contract;
 
     // при удалении из списка - удаляем сущность из БД
-    @OneToMany(mappedBy = "invoice", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "invoice", fetch = EAGER, cascade = ALL, orphanRemoval = true)
     private Set<Unit> units;
+
+    @OneToMany(mappedBy = "invoice", fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    private Set<InvoicePosition> positions;
 
 	
 	public Invoice() {
@@ -48,6 +54,9 @@ public class Invoice extends DictEntity{
 
     public Set<Unit> getUnits() {return units;}
     public void setUnits(Set<Unit> units) {this.units = units;}
+
+    public Set<InvoicePosition> getPositions() {return positions;}
+    public void setPositions(Set<InvoicePosition> positions) {this.positions = positions;}
 
 
     @Override

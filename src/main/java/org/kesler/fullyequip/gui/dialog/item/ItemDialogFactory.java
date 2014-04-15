@@ -49,6 +49,11 @@ public class ItemDialogFactory {
                 // Диалог для договора
                 itemDialog = new ContractDialog(parentDialog);
 
+            } else if (type == UnitState.class) {
+
+                // Диалог состояния оборудования
+                itemDialog = new UnitStateDialog(parentDialog);
+
             }
 
 
@@ -100,6 +105,12 @@ public class ItemDialogFactory {
             // Диалог для аукцона
             Contract contract = (Contract) item;
             itemDialog = new ContractDialog(parentDialog, contract);
+
+        } else if (item instanceof UnitState) {
+
+            // Диалог для состояния оборудования
+            UnitState unitState = (UnitState) item;
+            itemDialog = new UnitStateDialog(parentDialog, unitState);
 
         }
 

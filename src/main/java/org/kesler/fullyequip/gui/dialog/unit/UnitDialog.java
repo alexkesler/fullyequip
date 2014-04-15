@@ -1,19 +1,24 @@
-package org.kesler.fullyequip.gui.dialog.item;
+package org.kesler.fullyequip.gui.dialog.unit;
 
 import com.alee.extended.panel.CollapsiblePaneAdapter;
 import com.alee.extended.panel.WebCollapsiblePane;
 import net.miginfocom.swing.MigLayout;
+import org.kesler.fullyequip.gui.dialog.item.AbstractItemDialog;
 import org.kesler.fullyequip.logic.*;
 import org.kesler.fullyequip.logic.model.DefaultModel;
 import org.kesler.fullyequip.logic.model.ModelState;
 import org.kesler.fullyequip.logic.model.ModelStateListener;
+import org.kesler.fullyequip.logic.model.UnitStateModel;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.text.NumberFormatter;
-import java.awt.*;
+import java.awt.Font;
+import java.awt.Dimension;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Диалог редактирования единицы оборудования
@@ -22,13 +27,14 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
 
     private Invoice invoice;
     private Place place;
-
+    private UnitState state;
 
     private JLabel contractLabel;
     private JLabel invoiceLabel;
     private JLabel placeLabel;
 
     private JComboBox<UnitType> unitTypeComboBox;
+    private JComboBox<UnitState> unitStateComboBox;
     private JTextField unitNameTextField;
     private JTextField serialNumTextField;
     private JTextField invNumTextField;
@@ -92,6 +98,13 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
         equipPanel.add(new JLabel("Кол-во: "));
         equipPanel.add(quantityTextField, "w 50, wrap");
 
+        JPanel statePanel = new JPanel(new MigLayout("fill"));
+        statePanel.setBorder(BorderFactory.createEtchedBorder());
+
+        unitStateComboBox = new JComboBox<UnitState>(new UnitStateComboBoxModel());
+
+        statePanel.add(unitStateComboBox);
+
 
         JPanel unitMovePanel = new JPanel(new MigLayout("fill"));
         unitMovePanel.setBorder(BorderFactory.createEtchedBorder());
@@ -146,6 +159,7 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
         dataPanel.add(new JLabel("Размещение: "));
         dataPanel.add(placeLabel, "wrap");
         dataPanel.add(equipPanel, "span, grow");
+        dataPanel.add(statePanel, "span");
         dataPanel.add(unitMoveWebCollapsiblePane,"span");
 
         return dataPanel;
@@ -173,6 +187,8 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
         invNumTextField.setText(item.getInvNumber());
         priceTextField.setValue(item.getPrice());
         quantityTextField.setValue(item.getQuantity());
+
+        unitStateComboBox.setSelectedItem(item.getState());
 
     }
 
@@ -209,6 +225,7 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
         item.setPrice(price);
         item.setQuantity(quantity);
 
+        item.setState((UnitState)unitStateComboBox.getSelectedItem());
 
         item.setInvoice(invoice);
         item.setPlace(place);
@@ -253,18 +270,42 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
 
     }
 
+    // Модель для состояний оборудования
+    class UnitStateComboBoxModel extends DefaultComboBoxModel<UnitState> implements ModelStateListener {
+
+        private UnitStateModel model;
+
+        UnitStateComboBoxModel() {
+            model = new UnitStateModel();
+            model.addModelStateListener(this);
+            model.readItemsInSeparateThread();
+        }
+
+        @Override
+        public void modelStateChanged(ModelState state) {
+            if(state == ModelState.UPDATED) {
+                removeAllElements();
+                java.util.List<UnitState> unitStates = model.getAllItems();
+                for(UnitState unitState: unitStates) addElement(unitState);
+            }
+
+        }
+    }
+
     // Модель для таблицы перемещений
     class UnitMoveTableModel extends AbstractTableModel {
 
-        SimpleDateFormat simpleDateFormat;
+        private SimpleDateFormat simpleDateFormat;
+        private List<UnitMove> moves;
 
         UnitMoveTableModel() {
+            moves = new ArrayList<UnitMove>(item.getMoves());
             simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
         }
 
         @Override
         public int getRowCount() {
-            return item.getMoves().size();
+            return moves.size();
         }
 
         @Override
@@ -293,7 +334,7 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
 
             String value = "Не опр";
 
-            UnitMove move = item.getMoves().get(row);
+            UnitMove move = moves.get(row);
 
             switch (col) {
                 case 0:

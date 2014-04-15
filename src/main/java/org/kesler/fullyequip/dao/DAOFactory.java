@@ -1,6 +1,6 @@
 package org.kesler.fullyequip.dao;
 
-import org.kesler.fullyequip.dao.impl.GenericDAOImpl;
+import org.kesler.fullyequip.dao.impl.GenericDAOHibernateImpl;
 
 import org.kesler.fullyequip.logic.Unit;
 
@@ -20,14 +20,14 @@ public class DAOFactory {
 
 	public GenericDAO<Unit> getUnitDAO() {
 		if (unitDAO == null) {
-			unitDAO = new GenericDAOImpl<Unit>(Unit.class);
+			unitDAO = new GenericDAOHibernateImpl<Unit>(Unit.class);
 		}
 		
 		return unitDAO;
 	}
 
     public <T extends AbstractEntity> GenericDAO<T> getGenericDAO(Class<T> type) {
-        GenericDAO<T> genericDAO = new GenericDAOImpl<T>(type);
+        GenericDAO<T> genericDAO = new GenericDAOHibernateImpl<T>(type);
 
         return genericDAO;
     }

@@ -14,14 +14,14 @@ import org.kesler.fullyequip.dao.DAOListener;
 
 import org.kesler.fullyequip.util.HibernateUtil;
 
-public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> {
+public class GenericDAOHibernateImpl<T extends AbstractEntity> implements GenericDAO <T> {
 	protected final Logger log;
 
 	private List<DAOListener> listeners = new ArrayList<DAOListener>();
 
 	private Class<T> type;
 
-	public GenericDAOImpl(Class<T> type) {
+	public GenericDAOHibernateImpl(Class<T> type) {
 		this.type = type;
 		log = Logger.getLogger("GenericDAO<"+ type.getSimpleName() + ">");
 	}

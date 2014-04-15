@@ -5,7 +5,7 @@ import com.alee.extended.list.WebCheckBoxList;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
 import org.kesler.fullyequip.gui.dialog.ListDialogController;
-import org.kesler.fullyequip.gui.dialog.item.UnitDialog;
+import org.kesler.fullyequip.gui.dialog.unit.UnitDialog;
 import org.kesler.fullyequip.logic.Contract;
 import org.kesler.fullyequip.logic.Invoice;
 import org.kesler.fullyequip.logic.Place;

@@ -1,6 +1,6 @@
 package org.kesler.fullyequip.gui.equipment;
 
-import org.kesler.fullyequip.gui.dialog.item.InvoiceDialog;
+import org.kesler.fullyequip.gui.dialog.invoice.InvoiceDialog;
 import org.kesler.fullyequip.logic.Contract;
 import org.kesler.fullyequip.logic.Invoice;
 import org.kesler.fullyequip.logic.model.DefaultModel;

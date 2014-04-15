@@ -16,11 +16,21 @@ public class UnitState extends DictEntity{
     @Column(name = "Name", length = 50)
     private String name;
 
-    public UnitState() {}
+    @Column(name = "Initial")
+    private Boolean initial;
+
+    public UnitState() {
+        initial = false;
+    }
 
 
     public String getName() {return name;}
     public void setName(String name) {this.name = name;}
+
+    public Boolean getInitial() {return initial;}
+    public Boolean isInitial() {return initial;}
+    public void setInitial(Boolean initial) {this.initial = initial;}
+
 
 
     @Override

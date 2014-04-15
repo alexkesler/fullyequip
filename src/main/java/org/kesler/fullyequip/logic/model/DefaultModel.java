@@ -113,7 +113,7 @@ public class DefaultModel<T extends AbstractEntity> implements DAOListener{
 
     }
 
-    private void notifyListeners(ModelState state) {
+    protected void notifyListeners(ModelState state) {
         for (ModelStateListener listener: listeners) {
             listener.modelStateChanged(state);
         }

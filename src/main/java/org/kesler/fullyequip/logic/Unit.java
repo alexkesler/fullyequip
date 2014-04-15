@@ -1,19 +1,16 @@
 package org.kesler.fullyequip.logic;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.*;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-
-import org.hibernate.FetchMode;
-import org.hibernate.annotations.*;
-import org.kesler.fullyequip.dao.AbstractEntity;
 import org.kesler.fullyequip.gui.dict.DictEntity;
+
 
 /**
 * Единица оборудования
@@ -49,22 +46,24 @@ public class Unit extends DictEntity{
 	@JoinColumn(name="InvoiceID", nullable = false)
 	private Invoice invoice;
 
+    @ManyToOne
+    @JoinColumn(name = "InvoicePositionID", nullable = false)
+    private InvoicePosition invoicePosition;
+
 	@ManyToOne
 	@JoinColumn(name="PlaceID", nullable = false)
 	private Place place;
 
     @ManyToOne
-    @JoinColumn(name="StateID")
+    @JoinColumn(name="StateID", nullable = false)
     private UnitState state;
 
-    @OneToMany(mappedBy = "unit", fetch = FetchType.EAGER, orphanRemoval = true)
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
-    @Fetch(org.hibernate.annotations.FetchMode.SUBSELECT)
-    private List<UnitMove> moves;
+    @OneToMany(mappedBy = "unit", fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    private Set<UnitMove> moves;
 
 
 	public Unit() {
-        moves = new ArrayList<UnitMove>();
+        moves = new HashSet<UnitMove>();
         quantity = 1L;
     }
 
@@ -91,6 +90,9 @@ public class Unit extends DictEntity{
 	public Invoice getInvoice() {return invoice;}
 	public void setInvoice(Invoice invoice) {this.invoice = invoice;}
 
+    public InvoicePosition getInvoicePosition() {return invoicePosition;}
+    public void setInvoicePosition(InvoicePosition invoicePosition) {this.invoicePosition = invoicePosition;}
+
 	public Long getQuantity() {return quantity;}
 	public void setQuantity(Long quantity) {this.quantity = quantity;}
 
@@ -113,8 +115,8 @@ public class Unit extends DictEntity{
     public UnitState getState() {return state;}
     public void setState(UnitState state) {this.state = state;}
 
-    public List<UnitMove> getMoves() {return moves;}
-    public void setMoves(List<UnitMove> moves) {this.moves = moves;}
+    public Set<UnitMove> getMoves() {return moves;}
+    public void setMoves(Set<UnitMove> moves) {this.moves = moves;}
 
     @Override
     public String toString() {

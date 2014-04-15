@@ -14,6 +14,8 @@ class MainView extends JFrame {
 
     private MainViewController controller;
 
+    private JTree summaryTree;
+
     MainView(MainViewController controller) {
         super("Учет материальных средств");
         this.controller = controller;
@@ -82,6 +84,14 @@ class MainView extends JFrame {
             }
         });
 
+        JMenuItem unitStatesMenuItem = new JMenuItem("Состояния оборудования");
+        unitStatesMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.showUnitStateListDialog();
+            }
+        });
+
         JMenuItem placesMenuItem = new JMenuItem("Размещения");
         placesMenuItem.addActionListener(new ActionListener() {
             @Override
@@ -108,12 +118,27 @@ class MainView extends JFrame {
 
 
         dictMenu.add(unitTypesMenuItem);
+        dictMenu.add(unitStatesMenuItem);
         dictMenu.add(placesMenuItem);
         dictMenu.add(suppliersMenuItem);
         dictMenu.add(auctionTypesMenuItem);
 
+
+        JMenu reportMenu = new JMenu("Отчеты");
+
+
+        JMenu optionsMenu = new JMenu("Настройки");
+
+
+        JMenu aboutMenu = new JMenu("О программе");
+
+
+
         menuBar.add(taskMenu);
         menuBar.add(dictMenu);
+        menuBar.add(reportMenu);
+        menuBar.add(optionsMenu);
+        menuBar.add(aboutMenu);
 
         setJMenuBar(menuBar);
 
@@ -142,10 +167,14 @@ class MainView extends JFrame {
             }
         });
 
+        summaryTree = new JTree();
+        JScrollPane summaryTreeScrollPane = new JScrollPane(summaryTree);
+
         dataPanel.add(newUnitsButton, "span, split 4");
         dataPanel.add(newMoveButton);
         dataPanel.add(reportButton);
         dataPanel.add(placeEquipButton);
+        dataPanel.add(summaryTreeScrollPane,"push,grow");
 
 
         mainPanel.add(dataPanel, BorderLayout.CENTER);

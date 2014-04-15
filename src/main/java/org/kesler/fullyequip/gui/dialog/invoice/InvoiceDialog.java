@@ -1,4 +1,4 @@
-package org.kesler.fullyequip.gui.dialog.item;
+package org.kesler.fullyequip.gui.dialog.invoice;
 
 import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
