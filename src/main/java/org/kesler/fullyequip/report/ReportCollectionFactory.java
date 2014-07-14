@@ -3,12 +3,9 @@ package org.kesler.fullyequip.report;
 import org.kesler.fullyequip.logic.Contract;
 import org.kesler.fullyequip.logic.model.DefaultModel;
 
-import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by alex on 27.02.14.
- */
+
 public class ReportCollectionFactory {
 
     public static List<Contract> createContractCollection() {

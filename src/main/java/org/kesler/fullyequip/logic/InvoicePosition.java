@@ -16,6 +16,10 @@ import static javax.persistence.FetchType.*;
 @Table(name="InvoicePositions")
 public class InvoicePosition extends AbstractEntity{
 
+
+    @Column(name="Name", length=255)
+    private String name;
+
     @ManyToOne
     @JoinColumn(name = "InvoiceID", nullable = false)
     private Invoice invoice;
@@ -40,6 +44,9 @@ public class InvoicePosition extends AbstractEntity{
         units = new HashSet<Unit>();
     }
 
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public Invoice getInvoice() {return invoice;}
     public void setInvoice(Invoice invoice) {this.invoice = invoice;}
