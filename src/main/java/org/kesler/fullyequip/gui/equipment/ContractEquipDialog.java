@@ -5,11 +5,7 @@ import com.alee.extended.list.WebCheckBoxList;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
 import org.kesler.fullyequip.gui.dialog.ListDialogController;
-import org.kesler.fullyequip.gui.dialog.unit.UnitDialog;
-import org.kesler.fullyequip.logic.Contract;
-import org.kesler.fullyequip.logic.Invoice;
-import org.kesler.fullyequip.logic.Place;
-import org.kesler.fullyequip.logic.Unit;
+import org.kesler.fullyequip.logic.*;
 import org.kesler.fullyequip.util.ResourcesUtil;
 
 import javax.swing.*;
@@ -40,8 +36,8 @@ public class ContractEquipDialog extends AbstractDialog {
     private InvoicesCheckBoxListModel invoicesCheckBoxListModel;
     private WebCheckBoxList invoiceWebCheckBoxList;
     private JLabel defaultPlaceLabel;
-    private UnitsTableModel unitsTableModel;
-    private JTable unitsTable;
+    private InvoicePositionsTableModel invoicePositionsTableModel;
+    private JTable invoicePositionsTable;
 
     ContractEquipDialog(JDialog parentDialog, Contract contract, ContractEquipDialogController controller) {
         super(parentDialog, "Оборудование по договору", true);
@@ -89,7 +85,7 @@ public class ContractEquipDialog extends AbstractDialog {
 
             @Override
             public void contentsChanged(ListDataEvent e) {
-                 updateUnits();
+                 updateInvoicePositions();
             }
         });
         invoiceWebCheckBoxList.addMouseListener(new MouseAdapter() {
@@ -143,47 +139,47 @@ public class ContractEquipDialog extends AbstractDialog {
         });
 
         // Формируем таблицу с оборудованием
-        unitsTableModel = new UnitsTableModel();
-        unitsTable = new JTable(unitsTableModel);
+        invoicePositionsTableModel = new InvoicePositionsTableModel();
+        invoicePositionsTable = new JTable(invoicePositionsTableModel);
         // Устанавливаем ширину колонок
-        for (int i=0; i< unitsTableModel.getColumnCount(); i++) {
-            unitsTable.getColumnModel().getColumn(i).setPreferredWidth(unitsTableModel.getColumnWidth(i));
+        for (int i=0; i< invoicePositionsTableModel.getColumnCount(); i++) {
+            invoicePositionsTable.getColumnModel().getColumn(i).setPreferredWidth(invoicePositionsTableModel.getColumnWidth(i));
         }
-        unitsTable.addMouseListener(new MouseAdapter() {
+        invoicePositionsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if(e.getClickCount()==2) {
-                    editUnit();
+                if (e.getClickCount() == 2) {
+//                    editUnit();
                 }
             }
         });
-        JScrollPane unitsTableScrollPane = new JScrollPane(unitsTable);
+        JScrollPane unitsTableScrollPane = new JScrollPane(invoicePositionsTable);
 
-        // Кнопки управления списком оборудования
-        JButton addUnitButton = new JButton(ResourcesUtil.getIcon("add.png"));
-        addUnitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addUnit();
-            }
-        });
-
-        JButton editUnitButton = new JButton(ResourcesUtil.getIcon("pencil.png"));
-        editUnitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editUnit();
-            }
-        });
-
-        JButton removeUnitButton = new JButton(ResourcesUtil.getIcon("delete.png"));
-        removeUnitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                removeUnit();
-            }
-        });
+//        // Кнопки управления списком оборудования
+//        JButton addUnitButton = new JButton(ResourcesUtil.getIcon("add.png"));
+//        addUnitButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                addUnit();
+//            }
+//        });
+//
+//        JButton editUnitButton = new JButton(ResourcesUtil.getIcon("pencil.png"));
+//        editUnitButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                editUnit();
+//            }
+//        });
+//
+//        JButton removeUnitButton = new JButton(ResourcesUtil.getIcon("delete.png"));
+//        removeUnitButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                removeUnit();
+//            }
+//        });
 
 
         dataPanel.add(new JLabel("Договор: "), "span, split 2");
@@ -198,9 +194,9 @@ public class ContractEquipDialog extends AbstractDialog {
         dataPanel.add(selectDefaultPlaceButton, "wrap");
         dataPanel.add(new JLabel("Оборудование: "), "wrap");
         dataPanel.add(unitsTableScrollPane,"span, grow");
-        dataPanel.add(addUnitButton, "span, split 3");
-        dataPanel.add(editUnitButton);
-        dataPanel.add(removeUnitButton);
+//        dataPanel.add(addUnitButton, "span, split 3");
+//        dataPanel.add(editUnitButton);
+//        dataPanel.add(removeUnitButton);
 
 
         JPanel buttonPanel = new JPanel();
@@ -244,7 +240,7 @@ public class ContractEquipDialog extends AbstractDialog {
     private void loadGUIFromContract() {
         contractLabel.setText("<html>" + contract.toString() + "</html>");
         invoicesCheckBoxListModel.updateInvoices();
-        updateUnits();
+        updateInvoicePositions();
     }
 
     private void selectDefaultPlace() {
@@ -278,96 +274,96 @@ public class ContractEquipDialog extends AbstractDialog {
         }
     }
 
-    // Добавление оборудования
-    private void addUnit() {
-        List<Invoice> selectedInvoices = invoicesCheckBoxListModel.getSelectedInvoices();
-        if(selectedInvoices.size()!=1) {
-            JOptionPane.showMessageDialog(currentDialog,
-                    "Выберите одну накладную, по которой добавляется оборудование",
-                    "Внимание",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        Invoice invoice = selectedInvoices.get(0);
-
-        if(defaultPlace == null) {
-            JOptionPane.showMessageDialog(currentDialog,
-                    "Выберите место для размещения оборудования",
-                    "Внимание",
-                    JOptionPane.INFORMATION_MESSAGE);
-            selectDefaultPlace();
-        }
-
-        UnitDialog unitDialog = new UnitDialog(currentDialog,invoice,defaultPlace);
-        unitDialog.setVisible(true);
-        if(unitDialog.getResult()==UnitDialog.OK) {
-            Unit unit = unitDialog.getItem();
-            invoice.getUnits().add(unit);
-            updateUnits();
-        }
-    }
-
-    // Редактирвание оборудования
-    private void editUnit() {
-        int selectedIndex = unitsTable.getSelectedRow();
-        if(selectedIndex== -1) {
-            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано");
-            return;
-        }
-        Unit unit = unitsTableModel.getUnitAt(selectedIndex);
-        UnitDialog unitDialog = new UnitDialog(currentDialog, unit);
-        unitDialog.setVisible(true);
-        if(unitDialog.getResult()==UnitDialog.OK) {
-            unitsTableModel.unitUpdated(selectedIndex);
-        }
-    }
-
-    // Удаление оборудования
-    private void removeUnit() {
-        int selectedIndex = unitsTable.getSelectedRow();
-        if(selectedIndex== -1) {
-            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано");
-            return;
-        }
-
-        Unit unit = unitsTableModel.getUnitAt(selectedIndex);
-
-        int result = JOptionPane.showConfirmDialog(currentDialog,
-                "Удалить оборудование " + unit.toString(),
-                "Внимание",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
-        if (result == JOptionPane.OK_OPTION) {
-            Invoice invoice = unit.getInvoice();
-            invoice.getUnits().remove(unit);
-            unitsTableModel.unitRemoved(selectedIndex);
-        }
-
-
-
-    }
+//    // Добавление оборудования
+//    private void addUnit() {
+//        List<Invoice> selectedInvoices = invoicesCheckBoxListModel.getSelectedInvoices();
+//        if(selectedInvoices.size()!=1) {
+//            JOptionPane.showMessageDialog(currentDialog,
+//                    "Выберите одну накладную, по которой добавляется оборудование",
+//                    "Внимание",
+//                    JOptionPane.WARNING_MESSAGE);
+//            return;
+//        }
+//
+//        Invoice invoice = selectedInvoices.get(0);
+//
+//        if(defaultPlace == null) {
+//            JOptionPane.showMessageDialog(currentDialog,
+//                    "Выберите место для размещения оборудования",
+//                    "Внимание",
+//                    JOptionPane.INFORMATION_MESSAGE);
+//            selectDefaultPlace();
+//        }
+//
+//        UnitDialog unitDialog = new UnitDialog(currentDialog,invoice,defaultPlace);
+//        unitDialog.setVisible(true);
+//        if(unitDialog.getResult()==UnitDialog.OK) {
+//            Unit unit = unitDialog.getItem();
+//            invoice.getUnits().add(unit);
+//            updateInvoicePositions();
+//        }
+//    }
+//
+//    // Редактирвание оборудования
+//    private void editUnit() {
+//        int selectedIndex = invoicePositionsTable.getSelectedRow();
+//        if(selectedIndex== -1) {
+//            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано");
+//            return;
+//        }
+//        Unit unit = unitsTableModel.getInvoicePositionAt(selectedIndex);
+//        UnitDialog unitDialog = new UnitDialog(currentDialog, unit);
+//        unitDialog.setVisible(true);
+//        if(unitDialog.getResult()==UnitDialog.OK) {
+//            unitsTableModel.unitUpdated(selectedIndex);
+//        }
+//    }
+//
+//    // Удаление оборудования
+//    private void removeUnit() {
+//        int selectedIndex = invoicePositionsTable.getSelectedRow();
+//        if(selectedIndex== -1) {
+//            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано");
+//            return;
+//        }
+//
+//        Unit unit = unitsTableModel.getInvoicePositionAt(selectedIndex);
+//
+//        int result = JOptionPane.showConfirmDialog(currentDialog,
+//                "Удалить оборудование " + unit.toString(),
+//                "Внимание",
+//                JOptionPane.YES_NO_OPTION,
+//                JOptionPane.WARNING_MESSAGE);
+//        if (result == JOptionPane.OK_OPTION) {
+//            Invoice invoice = unit.getInvoice();
+//            invoice.getUnits().remove(unit);
+//            unitsTableModel.unitRemoved(selectedIndex);
+//        }
+//
+//
+//
+//    }
 
     //
-    private void moveUnitToInvoice() {
-        int selectedIndex = unitsTable.getSelectedRow();
-        if(selectedIndex== -1) {
-            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано");
-            return;
-        }
+//    private void moveUnitToInvoice() {
+//        int selectedIndex = invoicePositionsTable.getSelectedRow();
+//        if(selectedIndex== -1) {
+//            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано");
+//            return;
+//        }
+//
+//        InvoicePosition unit = invoicePositionsTableModel.getInvoicePositionAt(selectedIndex);
+//
+//    }
 
-        Unit unit = unitsTableModel.getUnitAt(selectedIndex);
 
-    }
-
-
-    private void updateUnits() {
+    private void updateInvoicePositions() {
         List<Invoice> invoices = invoicesCheckBoxListModel.getSelectedInvoices();
-        List<Unit> units = new ArrayList<Unit>();
+        List<InvoicePosition> invoicePositions = new ArrayList<InvoicePosition>();
         for(Invoice invoice: invoices) {
-            units.addAll(invoice.getUnits());
+            invoicePositions.addAll(invoice.getPositions());
         }
-        unitsTableModel.setUnits(units);
+        invoicePositionsTableModel.setInvoicePositions(invoicePositions);
     }
 
 
@@ -410,39 +406,39 @@ public class ContractEquipDialog extends AbstractDialog {
     }
 
     // модель данных для таблицы Оборудование
-    class UnitsTableModel extends AbstractTableModel {
+    class InvoicePositionsTableModel extends AbstractTableModel {
 
-        private List<Unit> units;
+        private List<InvoicePosition> invoicePositions;
 
-        UnitsTableModel() {
-           units = new ArrayList<Unit>();
+        InvoicePositionsTableModel() {
+           invoicePositions = new ArrayList<InvoicePosition>();
         }
 
-        void setUnits(List<Unit> units) {
-            this.units = units;
+        void setInvoicePositions(List<InvoicePosition> invoicePositions) {
+            this.invoicePositions = invoicePositions;
             fireTableDataChanged();
         }
 
-        Unit getUnitAt(int index) {
-            return units.get(index);
+        InvoicePosition getInvoicePositionAt(int index) {
+            return invoicePositions.get(index);
         }
 
-        void unitUpdated(int index) {
-            fireTableRowsUpdated(index,index);
-        }
-
-        void unitRemoved(int index) {
-            fireTableRowsDeleted(index,index);
-        }
+//        void unitUpdated(int index) {
+//            fireTableRowsUpdated(index,index);
+//        }
+//
+//        void unitRemoved(int index) {
+//            fireTableRowsDeleted(index,index);
+//        }
 
         @Override
         public int getRowCount() {
-            return units.size();
+            return invoicePositions.size();
         }
 
         @Override
         public int getColumnCount() {
-            return 6;
+            return 5;
         }
 
         public int getColumnWidth(int col) {
@@ -458,13 +454,10 @@ public class ContractEquipDialog extends AbstractDialog {
                     width = 100;
                     break;
                 case 3:
-                    width = 100;
+                    width = 50;
                     break;
                 case 4:
                     width = 20;
-                    break;
-                case 5:
-                    width = 200;
                     break;
             }
 
@@ -486,13 +479,10 @@ public class ContractEquipDialog extends AbstractDialog {
                     name = "Тип";
                     break;
                 case 3:
-                    name = "Инв. номер";
+                    name = "Цена";
                     break;
                 case 4:
-                    name = "Кол";
-                    break;
-                case 5:
-                    name = "Размещение";
+                    name = "Кол-во";
 
             }
 
@@ -502,7 +492,7 @@ public class ContractEquipDialog extends AbstractDialog {
         @Override
         public String getValueAt(int row, int col) {
 
-            Unit unit = units.get(row);
+            InvoicePosition invoicePosition = invoicePositions.get(row);
 
             String value = "Не опр";
             switch (col) {
@@ -510,19 +500,17 @@ public class ContractEquipDialog extends AbstractDialog {
                     value = String.valueOf(row + 1);
                     break;
                 case 1:
-                    value = unit.getName();
+                    value = invoicePosition.getName();
                     break;
                 case 2:
-                    value = unit.getType()==null?"Не опр":unit.getType().toString();
+                    value = invoicePosition.getUnitType()==null?"Не опр":invoicePosition.getUnitType().toString();
                     break;
                 case 3:
-                    value = unit.getInvNumber()==null?"Не опр":unit.getInvNumber();
+                    value = invoicePosition.getPrice()==null?"Не опр":invoicePosition.getPrice().toString();
                     break;
                 case 4:
-                    value = unit.getQuantity()==null?"Не опр":unit.getQuantity().toString();
+                    value = invoicePosition.getQuantity()==null?"Не опр":invoicePosition.getQuantity().toString();
                     break;
-                case 5:
-                    value = unit.getPlace()==null?"Не опр":unit.getPlace().toString();
 
             }
 

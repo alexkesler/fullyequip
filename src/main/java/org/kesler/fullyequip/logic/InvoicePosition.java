@@ -66,31 +66,31 @@ public class InvoicePosition extends AbstractEntity{
 
     public Set<Unit> getUnits() {return units;}
 
-    public void createUnits() {
-        if (invReg)
-            for (int i = 0; i < quantity; i++) {
-                Unit unit = new Unit();
-                unit.setName(name);
-                unit.setType(unitType);
-                unit.setPrice(price);
-                unit.setInvReg(invReg);
-                unit.setInvoicePosition(this);
-                unit.setInvoice(invoice);
-                unit.setQuantity(1L);
-                units.add(unit);
-            }
-        else {
-            Unit unit = new Unit();
-            unit.setName(name);
-            unit.setType(unitType);
-            unit.setPrice(price);
-            unit.setInvReg(invReg);
-            unit.setInvoicePosition(this);
-            unit.setInvoice(invoice);
-            unit.setQuantity(quantity);
-            units.add(unit);
-
-        }
-    }
+//    public void createUnits() {
+//        if (invReg)
+//            for (int i = 0; i < quantity; i++) {
+//                Unit unit = new Unit();
+//                unit.setName(name);
+//                unit.setType(unitType);
+//                unit.setPrice(price);
+//                unit.setInvReg(invReg);
+//                unit.setInvoicePosition(this);
+//                unit.setInvoice(invoice);
+//                unit.setQuantity(1L);
+//                units.add(unit);
+//            }
+//        else {
+//            Unit unit = new Unit();
+//            unit.setName(name);
+//            unit.setType(unitType);
+//            unit.setPrice(price);
+//            unit.setInvReg(invReg);
+//            unit.setInvoicePosition(this);
+//            unit.setInvoice(invoice);
+//            unit.setQuantity(quantity);
+//            units.add(unit);
+//
+//        }
+//    }
 
 }

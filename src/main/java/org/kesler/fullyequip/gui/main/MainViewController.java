@@ -36,6 +36,9 @@ public class MainViewController {
         ListDialogController.create(UnitType.class, "Типы оборудования").showDialog(view);
     }
 
+    public void exit() {
+        System.exit(0);
+    }
 
     void showUnitStateListDialog() {
         ListDialogController.create(UnitState.class,"Состояния оборудования").showDialog(view);
