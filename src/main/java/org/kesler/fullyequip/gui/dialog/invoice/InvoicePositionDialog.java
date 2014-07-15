@@ -115,7 +115,6 @@ public class InvoicePositionDialog extends AbstractDialog {
         }
 
         Double price = ((Number)priceTextField.getValue()).doubleValue();
-
         Long quantity = ((Number)quantityTextField.getValue()).longValue();
 
         invoicePosition.setUnitType((UnitType)unitTypeComboBox.getSelectedItem());
@@ -123,7 +122,6 @@ public class InvoicePositionDialog extends AbstractDialog {
         invoicePosition.setPrice(price);
         invoicePosition.setQuantity(quantity);
         invoicePosition.setInvReg(invRegCheckBox.isSelected());
-//        if (invoicePosition.getUnits().size()==0) invoicePosition.createUnits();
 
         return true;
     }

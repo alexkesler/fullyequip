@@ -63,6 +63,7 @@ public class Contract extends DictEntity{
 
     public Set<Invoice> getInvoices() {return invoices;}
 
+
     public Double computeTotal() {
         Double total = 0.0;
         for(Invoice invoice: invoices) total += invoice.computeTotal();

@@ -184,9 +184,9 @@ public class InvoiceDialog extends AbstractDialog {
         contractLabel.setText("<html>"+contractName+"</html>");
         numberTextField.setText(invoice.getNumber());
         dateWebDateField.setDate(invoice.getDate());
-        invoicePositionsTableModel.setInvoicePositions(new ArrayList<InvoicePosition>(invoice.getPositions()));
-        totalLabel.setText("<html><strong color=blue>"+ NumberFormat.getInstance().format(invoice.computeTotal()) + " р.</strong><html>");
+        updateInvoicePositions();
     }
+
 
 
     protected boolean readInvoiceFromGUI() {
@@ -196,12 +196,22 @@ public class InvoiceDialog extends AbstractDialog {
         return true;
     }
 
+    private void updateInvoicePositions() {
+        invoicePositionsTableModel.setInvoicePositions(new ArrayList<InvoicePosition>(invoice.getPositions()));
+        updateTotal();
+
+    }
+
+    private void updateTotal() {
+        totalLabel.setText("<html><strong color=blue>"+ NumberFormat.getInstance().format(invoice.computeTotal()) + " р.</strong><html>");
+    }
+
     private void addInvoicePosition() {
         InvoicePositionDialog invoicePositionDialog = new InvoicePositionDialog(currentDialog, invoice);
         invoicePositionDialog.setVisible(true);
         if(invoicePositionDialog.getResult() == InvoicePositionDialog.OK) {
             invoice.getPositions().add(invoicePositionDialog.getInvoicePosition());
-            loadGUIFromInvoice();
+            updateInvoicePositions();
         }
     }
 
@@ -213,7 +223,7 @@ public class InvoiceDialog extends AbstractDialog {
         InvoicePositionDialog invoicePositionDialog = new InvoicePositionDialog(currentDialog, selectedInvoicePosition);
         invoicePositionDialog.setVisible(true);
         if(invoicePositionDialog.getResult() == InvoicePositionDialog.OK) {
-            loadGUIFromInvoice();
+            updateInvoicePositions();
         }
 
     }
@@ -227,7 +237,7 @@ public class InvoiceDialog extends AbstractDialog {
                 "Внимание",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
         if(confirmResult==JOptionPane.YES_OPTION) {
             invoice.getPositions().remove(selectedInvoicePosition);
-            loadGUIFromInvoice();
+            updateInvoicePositions();
         }
     }
 

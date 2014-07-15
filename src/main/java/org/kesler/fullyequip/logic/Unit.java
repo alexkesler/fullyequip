@@ -42,10 +42,6 @@ public class Unit extends DictEntity{
     @Column(name="Quantity")
     private Long quantity; // Количество техники без инвентарников -  пилоты, патчкорды
 
-	@ManyToOne
-	@JoinColumn(name="InvoiceID", nullable = false)
-	private Invoice invoice;
-
     @ManyToOne
     @JoinColumn(name = "InvoicePositionID", nullable = false)
     private InvoicePosition invoicePosition;
@@ -87,9 +83,6 @@ public class Unit extends DictEntity{
 	public Double getPrice() {return price;}
 	public void setPrice(Double price) {this.price = price;}
 
-	public Invoice getInvoice() {return invoice;}
-	public void setInvoice(Invoice invoice) {this.invoice = invoice;}
-
     public InvoicePosition getInvoicePosition() {return invoicePosition;}
     public void setInvoicePosition(InvoicePosition invoicePosition) {this.invoicePosition = invoicePosition;}
 
@@ -98,6 +91,10 @@ public class Unit extends DictEntity{
 
 	public Place getPlace() {return place;}
 	public void setPlace(Place place) {
+        this.place = place;
+    }
+
+    public void moveTo(Place place) {
         // если присваивается то же место, то ничего не делаем
         if (this.place!=null && this.place.equals(place)) return;
         if (this.place!=null) this.place.getUnits().remove(this); // удаляемся из старого расположения
@@ -110,13 +107,13 @@ public class Unit extends DictEntity{
         move.setPlace(place);
         move.setMoveDate(new Date());
         moves.add(move);
+
     }
 
     public UnitState getState() {return state;}
     public void setState(UnitState state) {this.state = state;}
 
     public Set<UnitMove> getMoves() {return moves;}
-    public void setMoves(Set<UnitMove> moves) {this.moves = moves;}
 
     @Override
     public String toString() {

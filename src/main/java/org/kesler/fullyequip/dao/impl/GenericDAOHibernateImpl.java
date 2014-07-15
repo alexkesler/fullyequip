@@ -149,7 +149,7 @@ public class GenericDAOHibernateImpl<T extends AbstractEntity> implements Generi
 			log.info("Reading items");
 			notifyListeners(DAOState.READING);
 			list = session.createCriteria(type).list();
-			log.info("Readed " + list.size() + " items");
+			log.info("Read " + list.size() + " items");
 			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			log.error("Error reading items", he);

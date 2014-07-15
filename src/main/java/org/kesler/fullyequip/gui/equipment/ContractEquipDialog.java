@@ -11,6 +11,8 @@ import org.kesler.fullyequip.util.ResourcesUtil;
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import java.awt.*;
@@ -39,6 +41,7 @@ public class ContractEquipDialog extends AbstractDialog {
     private JLabel defaultPlaceLabel;
     private InvoicePositionsTableModel invoicePositionsTableModel;
     private JTable invoicePositionsTable;
+    private InvoicePosition selectedInvoicePosition;
 
     private JLabel totalLabel;
 
@@ -72,7 +75,6 @@ public class ContractEquipDialog extends AbstractDialog {
 
         contractLabel = new JLabel("Не определен");
         contractLabel.setFont(bigFont);
-//        contractLabel.setForeground(Color.GREEN);
         contractLabel.setBorder(BorderFactory.createEtchedBorder());
 
         // Формируем список накладных
@@ -148,41 +150,23 @@ public class ContractEquipDialog extends AbstractDialog {
         for (int i=0; i< invoicePositionsTableModel.getColumnCount(); i++) {
             invoicePositionsTable.getColumnModel().getColumn(i).setPreferredWidth(invoicePositionsTableModel.getColumnWidth(i));
         }
+        invoicePositionsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        invoicePositionsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                selectedInvoicePosition = invoicePositionsTableModel.getInvoicePositionAt(e.getFirstIndex());
+            }
+        });
         invoicePositionsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (e.getClickCount() == 2) {
-//                    editUnit();
+                    editInvoicePosition();
                 }
             }
         });
-        JScrollPane unitsTableScrollPane = new JScrollPane(invoicePositionsTable);
-
-//        // Кнопки управления списком оборудования
-//        JButton addUnitButton = new JButton(ResourcesUtil.getIcon("add.png"));
-//        addUnitButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                addUnit();
-//            }
-//        });
-//
-//        JButton editUnitButton = new JButton(ResourcesUtil.getIcon("pencil.png"));
-//        editUnitButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                editUnit();
-//            }
-//        });
-//
-//        JButton removeUnitButton = new JButton(ResourcesUtil.getIcon("delete.png"));
-//        removeUnitButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                removeUnit();
-//            }
-//        });
+        JScrollPane invoicePositionsScrollPane = new JScrollPane(invoicePositionsTable);
 
         totalLabel = new JLabel();
 
@@ -197,11 +181,8 @@ public class ContractEquipDialog extends AbstractDialog {
         dataPanel.add(defaultPlaceLabel, "growx");
         dataPanel.add(selectDefaultPlaceButton, "wrap");
         dataPanel.add(new JLabel("Оборудование: "), "wrap");
-        dataPanel.add(unitsTableScrollPane,"span, grow");
+        dataPanel.add(invoicePositionsScrollPane,"span, grow");
 
-//        dataPanel.add(addUnitButton, "span, split 3");
-//        dataPanel.add(editUnitButton);
-//        dataPanel.add(removeUnitButton);
         dataPanel.add(new JLabel(),"span, split 3, growx");
         dataPanel.add(new JLabel("Итого по договору: "));
         dataPanel.add(totalLabel);
@@ -261,6 +242,7 @@ public class ContractEquipDialog extends AbstractDialog {
     private void addInvoice() {
         controller.addInvoice();
         invoicesCheckBoxListModel.updateInvoices();
+        loadGUIFromContract();
     }
 
     // Редактирование накладной
@@ -270,6 +252,7 @@ public class ContractEquipDialog extends AbstractDialog {
 
         if (controller.editInvoice(selectedInvoice)) {
             invoicesCheckBoxListModel.updatedInvoice(selectedIndex);
+            loadGUIFromContract();
         }
     }
 
@@ -279,91 +262,18 @@ public class ContractEquipDialog extends AbstractDialog {
         Invoice selectedInvoice = (Invoice)invoicesCheckBoxListModel.getElementAt(selectedIndex).getUserObject();
         if (controller.removeInvoice(selectedInvoice)) {
             invoicesCheckBoxListModel.removedInvoice(selectedIndex);
+            loadGUIFromContract();
         }
     }
 
-//    // Добавление оборудования
-//    private void addUnit() {
-//        List<Invoice> selectedInvoices = invoicesCheckBoxListModel.getSelectedInvoices();
-//        if(selectedInvoices.size()!=1) {
-//            JOptionPane.showMessageDialog(currentDialog,
-//                    "Выберите одну накладную, по которой добавляется оборудование",
-//                    "Внимание",
-//                    JOptionPane.WARNING_MESSAGE);
-//            return;
-//        }
-//
-//        Invoice invoice = selectedInvoices.get(0);
-//
-//        if(defaultPlace == null) {
-//            JOptionPane.showMessageDialog(currentDialog,
-//                    "Выберите место для размещения оборудования",
-//                    "Внимание",
-//                    JOptionPane.INFORMATION_MESSAGE);
-//            selectDefaultPlace();
-//        }
-//
-//        UnitDialog unitDialog = new UnitDialog(currentDialog,invoice,defaultPlace);
-//        unitDialog.setVisible(true);
-//        if(unitDialog.getResult()==UnitDialog.OK) {
-//            Unit unit = unitDialog.getItem();
-//            invoice.getUnits().add(unit);
-//            updateInvoicePositions();
-//        }
-//    }
-//
-//    // Редактирвание оборудования
-//    private void editUnit() {
-//        int selectedIndex = invoicePositionsTable.getSelectedRow();
-//        if(selectedIndex== -1) {
-//            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано");
-//            return;
-//        }
-//        Unit unit = unitsTableModel.getInvoicePositionAt(selectedIndex);
-//        UnitDialog unitDialog = new UnitDialog(currentDialog, unit);
-//        unitDialog.setVisible(true);
-//        if(unitDialog.getResult()==UnitDialog.OK) {
-//            unitsTableModel.unitUpdated(selectedIndex);
-//        }
-//    }
-//
-//    // Удаление оборудования
-//    private void removeUnit() {
-//        int selectedIndex = invoicePositionsTable.getSelectedRow();
-//        if(selectedIndex== -1) {
-//            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано");
-//            return;
-//        }
-//
-//        Unit unit = unitsTableModel.getInvoicePositionAt(selectedIndex);
-//
-//        int result = JOptionPane.showConfirmDialog(currentDialog,
-//                "Удалить оборудование " + unit.toString(),
-//                "Внимание",
-//                JOptionPane.YES_NO_OPTION,
-//                JOptionPane.WARNING_MESSAGE);
-//        if (result == JOptionPane.OK_OPTION) {
-//            Invoice invoice = unit.getInvoice();
-//            invoice.getUnits().remove(unit);
-//            unitsTableModel.unitRemoved(selectedIndex);
-//        }
-//
-//
-//
-//    }
 
-    //
-//    private void moveUnitToInvoice() {
-//        int selectedIndex = invoicePositionsTable.getSelectedRow();
-//        if(selectedIndex== -1) {
-//            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано");
-//            return;
-//        }
-//
-//        InvoicePosition unit = invoicePositionsTableModel.getInvoicePositionAt(selectedIndex);
-//
-//    }
+    private void editInvoicePosition() {
+        if(selectedInvoicePosition==null) {
+            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано", "Ошибка", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
+    }
 
     private void updateInvoicePositions() {
         List<Invoice> invoices = invoicesCheckBoxListModel.getSelectedInvoices();
@@ -430,14 +340,6 @@ public class ContractEquipDialog extends AbstractDialog {
         InvoicePosition getInvoicePositionAt(int index) {
             return invoicePositions.get(index);
         }
-
-//        void unitUpdated(int index) {
-//            fireTableRowsUpdated(index,index);
-//        }
-//
-//        void unitRemoved(int index) {
-//            fireTableRowsDeleted(index,index);
-//        }
 
         @Override
         public int getRowCount() {

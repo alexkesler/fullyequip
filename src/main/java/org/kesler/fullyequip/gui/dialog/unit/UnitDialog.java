@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class UnitDialog extends AbstractItemDialog<Unit> {
 
-    private Invoice invoice;
+    private InvoicePosition invoicePosition;
     private Place place;
     private UnitState state;
 
@@ -46,9 +46,9 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
 
 
     // Создаем новое оборудование по указанной накладной и помещаем его в указанное место
-    public UnitDialog(JDialog parentDialog, Invoice invoice, Place place) {
+    public UnitDialog(JDialog parentDialog, InvoicePosition invoicePosition, Place place) {
         super(parentDialog, "Создать оборудование");
-        this.invoice = invoice;
+        this.invoicePosition = invoicePosition;
         this.place = place;
         loadGUIFromItem();
     }
@@ -56,7 +56,7 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
     // Редактируем оборудование
     public UnitDialog(JDialog parentDialog, Unit unit) {
         super(parentDialog, "Оборудование", unit);
-        this.invoice = unit.getInvoice();
+        this.invoicePosition = unit.getInvoicePosition();
         this.place = unit.getPlace();
         loadGUIFromItem();
 
@@ -173,6 +173,7 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
     @Override
     protected void loadGUIFromItem() {
 
+        Invoice invoice = invoicePosition.getInvoice();
         String contractName = invoice==null?"Не определен":invoice.getContract().toString();
 
         contractLabel.setText("<html>"
@@ -227,7 +228,7 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
 
         item.setState((UnitState)unitStateComboBox.getSelectedItem());
 
-        item.setInvoice(invoice);
+        item.setInvoicePosition(invoicePosition);
         item.setPlace(place);
 
         return true;

@@ -16,7 +16,6 @@ import static javax.persistence.FetchType.*;
 @Table(name="InvoicePositions")
 public class InvoicePosition extends AbstractEntity{
 
-
     @Column(name="Name", length=255)
     private String name;
 
@@ -70,31 +69,5 @@ public class InvoicePosition extends AbstractEntity{
         return (price==null?0.0:price) * (quantity==null?0:quantity);
     }
 
-//    public void createUnits() {
-//        if (invReg)
-//            for (int i = 0; i < quantity; i++) {
-//                Unit unit = new Unit();
-//                unit.setName(name);
-//                unit.setType(unitType);
-//                unit.setPrice(price);
-//                unit.setInvReg(invReg);
-//                unit.setInvoicePosition(this);
-//                unit.setInvoice(invoice);
-//                unit.setQuantity(1L);
-//                units.add(unit);
-//            }
-//        else {
-//            Unit unit = new Unit();
-//            unit.setName(name);
-//            unit.setType(unitType);
-//            unit.setPrice(price);
-//            unit.setInvReg(invReg);
-//            unit.setInvoicePosition(this);
-//            unit.setInvoice(invoice);
-//            unit.setQuantity(quantity);
-//            units.add(unit);
-//
-//        }
-//    }
 
 }
