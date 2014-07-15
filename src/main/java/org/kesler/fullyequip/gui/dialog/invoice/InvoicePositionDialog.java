@@ -2,6 +2,7 @@ package org.kesler.fullyequip.gui.dialog.invoice;
 
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
+import org.kesler.fullyequip.logic.Invoice;
 import org.kesler.fullyequip.logic.InvoicePosition;
 import org.kesler.fullyequip.logic.UnitType;
 import org.kesler.fullyequip.logic.model.DefaultModel;
@@ -26,11 +27,13 @@ public class InvoicePositionDialog extends AbstractDialog {
     private JTextField unitNameTextField;
     private JFormattedTextField priceTextField;
     private JFormattedTextField quantityTextField;
+    private JCheckBox invRegCheckBox;
 
-    public InvoicePositionDialog(JDialog parentDialog) {
+    public InvoicePositionDialog(JDialog parentDialog, Invoice invoice) {
         super(parentDialog, true);
         createGUI();
         invoicePosition = new InvoicePosition();
+        invoicePosition.setInvoice(invoice);
         loadGUIFromInvoicePosition();
         pack();
         setLocationRelativeTo(parentDialog);
@@ -59,15 +62,18 @@ public class InvoicePositionDialog extends AbstractDialog {
         unitNameTextField = new JTextField(15);
         priceTextField = new JFormattedTextField(new NumberFormatter(NumberFormat.getNumberInstance()));
         quantityTextField = new JFormattedTextField(new NumberFormatter(NumberFormat.getIntegerInstance()));
+        invRegCheckBox = new JCheckBox();
 
         dataPanel.add(new JLabel("Тип оборудования"));
         dataPanel.add(unitTypeComboBox,"wrap");
         dataPanel.add(new JLabel("Наименование"));
         dataPanel.add(unitNameTextField, "wrap");
         dataPanel.add(new JLabel("Цена"));
-        dataPanel.add(priceTextField, "wrap");
+        dataPanel.add(priceTextField, "w 100, wrap");
         dataPanel.add(new JLabel("Количество"));
-        dataPanel.add(quantityTextField, "wrap");
+        dataPanel.add(quantityTextField, "w 50, wrap");
+        dataPanel.add(new JLabel("Инвентарный учет"));
+        dataPanel.add(invRegCheckBox, "wrap");
 
         JPanel buttonPanel = new JPanel();
 
@@ -91,7 +97,7 @@ public class InvoicePositionDialog extends AbstractDialog {
         });
 
         buttonPanel.add(okButton);
-
+        buttonPanel.add(cancelButton);
 
         mainPanel.add(dataPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -112,9 +118,12 @@ public class InvoicePositionDialog extends AbstractDialog {
 
         Long quantity = ((Number)quantityTextField.getValue()).longValue();
 
+        invoicePosition.setUnitType((UnitType)unitTypeComboBox.getSelectedItem());
         invoicePosition.setName(name);
         invoicePosition.setPrice(price);
         invoicePosition.setQuantity(quantity);
+        invoicePosition.setInvReg(invRegCheckBox.isSelected());
+        if (invoicePosition.getUnits().size()==0) invoicePosition.createUnits();
 
         return true;
     }
@@ -124,6 +133,7 @@ public class InvoicePositionDialog extends AbstractDialog {
         unitTypeComboBox.setSelectedItem(invoicePosition.getUnitType());
         priceTextField.setValue(invoicePosition.getPrice());
         quantityTextField.setValue(invoicePosition.getQuantity());
+        invRegCheckBox.setSelected(invoicePosition.isInvReg()==null?false:invoicePosition.isInvReg());
     }
 
     // Модель для типов оборудования

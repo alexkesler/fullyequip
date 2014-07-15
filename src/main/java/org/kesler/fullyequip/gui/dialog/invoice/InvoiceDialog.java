@@ -2,16 +2,22 @@ package org.kesler.fullyequip.gui.dialog.invoice;
 
 import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
+import org.apache.log4j.lf5.util.ResourceUtils;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
 import org.kesler.fullyequip.logic.Contract;
 import org.kesler.fullyequip.logic.Invoice;
 import org.kesler.fullyequip.logic.InvoicePosition;
+import org.kesler.fullyequip.util.ResourcesUtil;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 
@@ -27,6 +33,7 @@ public class InvoiceDialog extends AbstractDialog {
     private WebDateField dateWebDateField;
 
     private InvoicePositionsTableModel invoicePositionsTableModel;
+    private InvoicePosition selectedInvoicePosition;
 
 
     public InvoiceDialog(JDialog parentDialog, Contract contract) {
@@ -76,7 +83,47 @@ public class InvoiceDialog extends AbstractDialog {
 
         invoicePositionsTableModel = new InvoicePositionsTableModel();
         JTable invoicePositionsTable = new JTable(invoicePositionsTableModel);
+        invoicePositionsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        invoicePositionsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                selectedInvoicePosition = invoicePositionsTableModel.getInvoicePosition(e.getFirstIndex());
+            }
+        });
+        invoicePositionsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if(e.getClickCount()==2) {
+                    editInvoicePosition();
+                }
+            }
+        });
         JScrollPane invoicePositionsTableScrollPane = new JScrollPane(invoicePositionsTable);
+
+        final JButton addInvoicePositionButton = new JButton(ResourcesUtil.getIcon("add.png"));
+        addInvoicePositionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addInvoicePosition();
+            }
+        });
+
+        JButton editInvoicePositionButton = new JButton(ResourcesUtil.getIcon("pencil.png"));
+        editInvoicePositionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editInvoicePosition();
+            }
+        });
+
+        JButton removeInvoicePositionButton = new JButton(ResourcesUtil.getIcon("delete.png"));
+        removeInvoicePositionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeInvoicePosition();
+            }
+        });
 
         // Собираем панель данных
         dataPanel.add(new JLabel("Договор: "));
@@ -86,6 +133,9 @@ public class InvoiceDialog extends AbstractDialog {
         dataPanel.add(new JLabel(" от "));
         dataPanel.add(dateWebDateField, "wrap");
         dataPanel.add(invoicePositionsTableScrollPane, "span, grow");
+        dataPanel.add(addInvoicePositionButton, "span, split 3");
+        dataPanel.add(editInvoicePositionButton);
+        dataPanel.add(removeInvoicePositionButton);
 
         //  Панель кнопок
         JPanel buttonPanel = new JPanel();
@@ -136,8 +186,43 @@ public class InvoiceDialog extends AbstractDialog {
         return true;
     }
 
+    private void addInvoicePosition() {
+        InvoicePositionDialog invoicePositionDialog = new InvoicePositionDialog(currentDialog, invoice);
+        invoicePositionDialog.setVisible(true);
+        if(invoicePositionDialog.getResult() == InvoicePositionDialog.OK) {
+            invoice.getPositions().add(invoicePositionDialog.getInvoicePosition());
+            loadGUIFromInvoice();
+        }
+    }
+
+    private void editInvoicePosition() {
+        if(selectedInvoicePosition==null) {
+            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        InvoicePositionDialog invoicePositionDialog = new InvoicePositionDialog(currentDialog, selectedInvoicePosition);
+        invoicePositionDialog.setVisible(true);
+        if(invoicePositionDialog.getResult() == InvoicePositionDialog.OK) {
+            loadGUIFromInvoice();
+        }
+
+    }
+
+    private void removeInvoicePosition() {
+        if(selectedInvoicePosition==null) {
+            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int confirmResult = JOptionPane.showConfirmDialog(currentDialog,"Удалить позицию накладной и соответствующие записи об оборудовании?",
+                "Внимание",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+        if(confirmResult==JOptionPane.YES_OPTION) {
+            invoice.getPositions().remove(selectedInvoicePosition);
+            loadGUIFromInvoice();
+        }
+    }
+
     class InvoicePositionsTableModel extends AbstractTableModel {
-        private java.util.List<InvoicePosition> invoicePositions;
+        private List<InvoicePosition> invoicePositions;
 
         InvoicePositionsTableModel() {
             invoicePositions = new ArrayList<InvoicePosition>();
@@ -146,6 +231,10 @@ public class InvoiceDialog extends AbstractDialog {
         public void setInvoicePositions(List<InvoicePosition> invoicePositions) {
             this.invoicePositions = invoicePositions;
             fireTableDataChanged();
+        }
+
+        InvoicePosition getInvoicePosition(int index) {
+            return invoicePositions.get(index);
         }
 
         @Override
@@ -159,6 +248,23 @@ public class InvoiceDialog extends AbstractDialog {
         }
 
         @Override
+        public String getColumnName(int column) {
+            switch (column) {
+                case 0:
+                    return "№";
+                case 1:
+                    return "Наименование";
+                case 2:
+                    return "Тип";
+                case 3:
+                    return "Цена";
+                case 4:
+                    return "Кол-во";
+            }
+            return "";
+        }
+
+        @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
             InvoicePosition invoicePosition = invoicePositions.get(rowIndex);
             switch (columnIndex) {
@@ -167,7 +273,7 @@ public class InvoiceDialog extends AbstractDialog {
                 case 1:
                     return invoicePosition.getName();
                 case 2:
-                    return invoicePosition.getUnitType().getName();
+                    return invoicePosition.getUnitType();
                 case 3:
                     return invoicePosition.getPrice();
                 case 4:

@@ -53,10 +53,8 @@ public class Invoice extends DictEntity{
 	public void setContract(Contract contract) {this.contract = contract;}
 
     public Set<Unit> getUnits() {return units;}
-    public void setUnits(Set<Unit> units) {this.units = units;}
 
     public Set<InvoicePosition> getPositions() {return positions;}
-    public void setPositions(Set<InvoicePosition> positions) {this.positions = positions;}
 
 
     @Override
