@@ -5,6 +5,7 @@ import com.alee.extended.list.WebCheckBoxList;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
 import org.kesler.fullyequip.gui.dialog.ListDialogController;
+import org.kesler.fullyequip.gui.dialog.invoice.InvoicePositionDialog;
 import org.kesler.fullyequip.logic.*;
 import org.kesler.fullyequip.util.ResourcesUtil;
 
@@ -229,7 +230,6 @@ public class ContractEquipDialog extends AbstractDialog {
         contractLabel.setText("<html>" + contract.toString() + "</html>");
         invoicesCheckBoxListModel.updateInvoices();
         updateInvoicePositions();
-        totalLabel.setText("<html><strong color=blue>" + NumberFormat.getInstance().format(contract.computeTotal()) + " р.</strong></html>");
     }
 
     private void selectDefaultPlace() {
@@ -242,7 +242,7 @@ public class ContractEquipDialog extends AbstractDialog {
     private void addInvoice() {
         controller.addInvoice();
         invoicesCheckBoxListModel.updateInvoices();
-        loadGUIFromContract();
+        updateInvoicePositions();
     }
 
     // Редактирование накладной
@@ -252,7 +252,7 @@ public class ContractEquipDialog extends AbstractDialog {
 
         if (controller.editInvoice(selectedInvoice)) {
             invoicesCheckBoxListModel.updatedInvoice(selectedIndex);
-            loadGUIFromContract();
+            updateInvoicePositions();
         }
     }
 
@@ -262,7 +262,7 @@ public class ContractEquipDialog extends AbstractDialog {
         Invoice selectedInvoice = (Invoice)invoicesCheckBoxListModel.getElementAt(selectedIndex).getUserObject();
         if (controller.removeInvoice(selectedInvoice)) {
             invoicesCheckBoxListModel.removedInvoice(selectedIndex);
-            loadGUIFromContract();
+            updateInvoicePositions();
         }
     }
 
@@ -271,6 +271,11 @@ public class ContractEquipDialog extends AbstractDialog {
         if(selectedInvoicePosition==null) {
             JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано", "Ошибка", JOptionPane.WARNING_MESSAGE);
             return;
+        }
+        InvoicePositionDialog invoicePositionDialog = new InvoicePositionDialog(currentDialog, selectedInvoicePosition);
+        invoicePositionDialog.setVisible(true);
+        if(invoicePositionDialog.getResult() == InvoicePositionDialog.OK) {
+            updateInvoicePositions();
         }
 
     }
@@ -282,6 +287,11 @@ public class ContractEquipDialog extends AbstractDialog {
             invoicePositions.addAll(invoice.getPositions());
         }
         invoicePositionsTableModel.setInvoicePositions(invoicePositions);
+        updateTotal();
+    }
+
+    private void updateTotal() {
+        totalLabel.setText("<html><strong color=blue>" + NumberFormat.getInstance().format(contract.computeTotal()) + " р.</strong></html>");
     }
 
 
