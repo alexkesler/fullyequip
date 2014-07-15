@@ -13,11 +13,13 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.List;
 
@@ -34,6 +36,8 @@ public class InvoiceDialog extends AbstractDialog {
 
     private InvoicePositionsTableModel invoicePositionsTableModel;
     private InvoicePosition selectedInvoicePosition;
+
+    private JLabel totalLabel;
 
 
     public InvoiceDialog(JDialog parentDialog, Contract contract) {
@@ -125,6 +129,8 @@ public class InvoiceDialog extends AbstractDialog {
             }
         });
 
+        totalLabel = new JLabel();
+
         // Собираем панель данных
         dataPanel.add(new JLabel("Договор: "));
         dataPanel.add(contractLabel, "push, w 300, wrap");
@@ -133,9 +139,12 @@ public class InvoiceDialog extends AbstractDialog {
         dataPanel.add(new JLabel(" от "));
         dataPanel.add(dateWebDateField, "wrap");
         dataPanel.add(invoicePositionsTableScrollPane, "span, grow");
-        dataPanel.add(addInvoicePositionButton, "span, split 3");
+        dataPanel.add(addInvoicePositionButton, "span, split 6");
         dataPanel.add(editInvoicePositionButton);
         dataPanel.add(removeInvoicePositionButton);
+        dataPanel.add(new JLabel(), "growx");
+        dataPanel.add(new JLabel("Итого по накладной: "));
+        dataPanel.add(totalLabel);
 
         //  Панель кнопок
         JPanel buttonPanel = new JPanel();
@@ -176,6 +185,7 @@ public class InvoiceDialog extends AbstractDialog {
         numberTextField.setText(invoice.getNumber());
         dateWebDateField.setDate(invoice.getDate());
         invoicePositionsTableModel.setInvoicePositions(new ArrayList<InvoicePosition>(invoice.getPositions()));
+        totalLabel.setText("<html><strong color=blue>"+ NumberFormat.getInstance().format(invoice.computeTotal()) + " р.</strong><html>");
     }
 
 
@@ -275,7 +285,7 @@ public class InvoiceDialog extends AbstractDialog {
                 case 2:
                     return invoicePosition.getUnitType();
                 case 3:
-                    return invoicePosition.getPrice();
+                    return NumberFormat.getInstance().format(invoicePosition.getPrice());
                 case 4:
                     return invoicePosition.getQuantity();
 

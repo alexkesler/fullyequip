@@ -66,6 +66,10 @@ public class InvoicePosition extends AbstractEntity{
 
     public Set<Unit> getUnits() {return units;}
 
+    public Double computeTotal() {
+        return (price==null?0.0:price) * (quantity==null?0:quantity);
+    }
+
 //    public void createUnits() {
 //        if (invReg)
 //            for (int i = 0; i < quantity; i++) {

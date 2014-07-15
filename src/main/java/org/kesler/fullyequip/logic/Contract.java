@@ -32,8 +32,6 @@ public class Contract extends DictEntity{
 	private Auction auction;
 
     @OneToMany(mappedBy = "contract", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
-//    @Cascade({CascadeType.SAVE_UPDATE,CascadeType.DELETE})
-//    @Fetch(FetchMode.SUBSELECT)
     private Set<Invoice> invoices;
 
 
@@ -64,9 +62,13 @@ public class Contract extends DictEntity{
 
 
     public Set<Invoice> getInvoices() {return invoices;}
-    public void setInvoices(Set<Invoice> invoices) {this.invoices = invoices;}
 
+    public Double computeTotal() {
+        Double total = 0.0;
+        for(Invoice invoice: invoices) total += invoice.computeTotal();
 
+        return total;
+    }
 
     @Override
     public String toString() {

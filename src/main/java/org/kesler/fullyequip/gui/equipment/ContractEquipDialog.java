@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +39,8 @@ public class ContractEquipDialog extends AbstractDialog {
     private JLabel defaultPlaceLabel;
     private InvoicePositionsTableModel invoicePositionsTableModel;
     private JTable invoicePositionsTable;
+
+    private JLabel totalLabel;
 
     ContractEquipDialog(JDialog parentDialog, Contract contract, ContractEquipDialogController controller) {
         super(parentDialog, "Оборудование по договору", true);
@@ -181,6 +184,7 @@ public class ContractEquipDialog extends AbstractDialog {
 //            }
 //        });
 
+        totalLabel = new JLabel();
 
         dataPanel.add(new JLabel("Договор: "), "span, split 2");
         dataPanel.add(contractLabel, "growx,wrap");
@@ -194,10 +198,13 @@ public class ContractEquipDialog extends AbstractDialog {
         dataPanel.add(selectDefaultPlaceButton, "wrap");
         dataPanel.add(new JLabel("Оборудование: "), "wrap");
         dataPanel.add(unitsTableScrollPane,"span, grow");
+
 //        dataPanel.add(addUnitButton, "span, split 3");
 //        dataPanel.add(editUnitButton);
 //        dataPanel.add(removeUnitButton);
-
+        dataPanel.add(new JLabel(),"span, split 3, growx");
+        dataPanel.add(new JLabel("Итого по договору: "));
+        dataPanel.add(totalLabel);
 
         JPanel buttonPanel = new JPanel();
 
@@ -241,6 +248,7 @@ public class ContractEquipDialog extends AbstractDialog {
         contractLabel.setText("<html>" + contract.toString() + "</html>");
         invoicesCheckBoxListModel.updateInvoices();
         updateInvoicePositions();
+        totalLabel.setText("<html><strong color=blue>" + NumberFormat.getInstance().format(contract.computeTotal()) + " р.</strong></html>");
     }
 
     private void selectDefaultPlace() {
@@ -506,7 +514,7 @@ public class ContractEquipDialog extends AbstractDialog {
                     value = invoicePosition.getUnitType()==null?"Не опр":invoicePosition.getUnitType().toString();
                     break;
                 case 3:
-                    value = invoicePosition.getPrice()==null?"Не опр":invoicePosition.getPrice().toString();
+                    value = invoicePosition.getPrice()==null?"Не опр":NumberFormat.getInstance().format(invoicePosition.getPrice());
                     break;
                 case 4:
                     value = invoicePosition.getQuantity()==null?"Не опр":invoicePosition.getQuantity().toString();

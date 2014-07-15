@@ -38,6 +38,7 @@ public class Invoice extends DictEntity{
 	
 	public Invoice() {
         units = new HashSet<Unit>();
+        positions = new HashSet<InvoicePosition>();
     }
 
 	
@@ -55,6 +56,13 @@ public class Invoice extends DictEntity{
     public Set<Unit> getUnits() {return units;}
 
     public Set<InvoicePosition> getPositions() {return positions;}
+
+    public Double computeTotal() {
+        Double total = 0.0;
+        for(InvoicePosition invoicePosition: positions) total += invoicePosition.computeTotal();
+
+        return total;
+    }
 
 
     @Override
