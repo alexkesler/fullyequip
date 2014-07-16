@@ -32,14 +32,12 @@ import java.util.Set;
 public class ContractEquipDialog extends AbstractDialog {
 
     private Contract contract;
-    private Place defaultPlace;
 
     private ContractEquipDialogController controller;
 
     private JLabel contractLabel;
     private InvoicesCheckBoxListModel invoicesCheckBoxListModel;
     private WebCheckBoxList invoiceWebCheckBoxList;
-    private JLabel defaultPlaceLabel;
     private InvoicePositionsTableModel invoicePositionsTableModel;
     private JTable invoicePositionsTable;
     private InvoicePosition selectedInvoicePosition;
@@ -132,18 +130,6 @@ public class ContractEquipDialog extends AbstractDialog {
             }
         });
 
-
-        defaultPlaceLabel = new JLabel("Не определено");
-        defaultPlaceLabel.setBorder(BorderFactory.createEtchedBorder());
-
-        JButton selectDefaultPlaceButton = new JButton(ResourcesUtil.getIcon("book_previous.png"));
-        selectDefaultPlaceButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectDefaultPlace();
-            }
-        });
-
         // Формируем таблицу с оборудованием
         invoicePositionsTableModel = new InvoicePositionsTableModel();
         invoicePositionsTable = new JTable(invoicePositionsTableModel);
@@ -178,9 +164,6 @@ public class ContractEquipDialog extends AbstractDialog {
         dataPanel.add(addInvoiceButton, "skip, span, split 3");
         dataPanel.add(editInvoiceButton);
         dataPanel.add(removeInvoiceButton, "wrap");
-        dataPanel.add(new JLabel("Размещение: "));
-        dataPanel.add(defaultPlaceLabel, "growx");
-        dataPanel.add(selectDefaultPlaceButton, "wrap");
         dataPanel.add(new JLabel("Оборудование: "), "wrap");
         dataPanel.add(invoicePositionsScrollPane,"span, grow");
 
@@ -231,12 +214,6 @@ public class ContractEquipDialog extends AbstractDialog {
         invoicesCheckBoxListModel.updateInvoices();
         updateInvoicePositions();
     }
-
-    private void selectDefaultPlace() {
-        defaultPlace = ListDialogController.create(Place.class, "Размещения").showSelectDialog(currentDialog);
-        defaultPlaceLabel.setText(defaultPlace==null?"Не определено":defaultPlace.toString());
-    }
-
 
     // Добавление накладной
     private void addInvoice() {
