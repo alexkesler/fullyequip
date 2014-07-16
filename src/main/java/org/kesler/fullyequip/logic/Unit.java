@@ -47,7 +47,7 @@ public class Unit extends DictEntity{
     private InvoicePosition invoicePosition;
 
 	@ManyToOne
-	@JoinColumn(name="PlaceID")
+	@JoinColumn(name="PlaceID", nullable = false)
 	private Place place;
 
     @ManyToOne
