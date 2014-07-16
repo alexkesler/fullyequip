@@ -1,6 +1,7 @@
 package org.kesler.fullyequip.logic;
 
 
+import org.kesler.fullyequip.dao.AbstractEntity;
 import org.kesler.fullyequip.gui.dict.DictEntity;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import java.util.Set;
 */
 @Entity
 @Table(name = "Places")
-public class Place extends DictEntity{
+public class Place extends AbstractEntity implements DictEntity{
 
     @Column(name = "Name", length = 255)
 	private String name;
@@ -73,7 +74,7 @@ public class Place extends DictEntity{
     public Set<Unit> getUnits() {return units;}
 
     @Override
-    public String toString() {
+    public String getDictName() {
         return name;
     }
 

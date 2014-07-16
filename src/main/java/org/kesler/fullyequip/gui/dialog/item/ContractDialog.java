@@ -24,7 +24,6 @@ public class ContractDialog extends AbstractItemDialog<Contract>{
     private Supplier supplier;
     private JLabel supplierLabel;
     private JRadioButton byAuctionRadioButton;
-//    private WebCollapsiblePane auctionWebCollapsiblePane;
     private JPanel auctionPanel;
     private Auction auction;
     private JLabel auctionLabel;
@@ -70,8 +69,6 @@ public class ContractDialog extends AbstractItemDialog<Contract>{
             public void actionPerformed(ActionEvent e) {
                 if (byAuctionRadioButton.isSelected()) {
                     auctionPanel.setVisible(true);
-//                    auctionWebCollapsiblePane.setExpanded(true);
-//                    System.out.println("----By auction----");
                     pack();
                 }
             }
@@ -81,9 +78,7 @@ public class ContractDialog extends AbstractItemDialog<Contract>{
             @Override
             public void actionPerformed(ActionEvent e) {
                 auctionPanel.setVisible(false);
-//                auctionWebCollapsiblePane.setExpanded(false);
                 setAuction(null);
-//                System.out.println("----Not by auction----");
                 pack();
             }
         });
@@ -105,8 +100,6 @@ public class ContractDialog extends AbstractItemDialog<Contract>{
         auctionPanel.add(new JLabel("Аукцион: "));
         auctionPanel.add(auctionLabel, "pushx, grow");
         auctionPanel.add(selectAuctionButton);
-//        auctionWebCollapsiblePane = new WebCollapsiblePane("Аукцион", auctionPanel);
-//        auctionWebCollapsiblePane.setExpanded(false);
 
 
 
@@ -193,7 +186,7 @@ public class ContractDialog extends AbstractItemDialog<Contract>{
 
     private void setAuction(Auction auction) {
         this.auction = auction;
-        auctionLabel.setText(auction==null?"Не определен":auction.toString());
+        auctionLabel.setText(auction==null?"Не определен":auction.getDictName());
 
     }
 

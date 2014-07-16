@@ -1,6 +1,7 @@
 package org.kesler.fullyequip.logic;
 
 
+import org.kesler.fullyequip.dao.AbstractEntity;
 import org.kesler.fullyequip.gui.dict.DictEntity;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import static javax.persistence.FetchType.*;
 */
 @Entity
 @Table(name = "Invoices")
-public class Invoice extends DictEntity{
+public class Invoice extends AbstractEntity implements DictEntity{
 
     @Column(name = "Number", length = 255)
 	private String number;
@@ -28,39 +29,34 @@ public class Invoice extends DictEntity{
     @JoinColumn(name = "ContractID",nullable = false)
 	private Contract contract;
 
-    // при удалении из списка - удаляем сущность из БД
-    @OneToMany(mappedBy = "invoice", fetch = EAGER, cascade = ALL, orphanRemoval = true)
-    private Set<Unit> units;
-
     @OneToMany(mappedBy = "invoice", fetch = EAGER, cascade = ALL, orphanRemoval = true)
     private Set<InvoicePosition> positions;
 
 	
 	public Invoice() {
-        units = new HashSet<Unit>();
+        positions = new HashSet<InvoicePosition>();
     }
 
 	
 	public String getNumber() {return number;}
 	public void setNumber(String number) {this.number = number;}
 
-
 	public Date getDate() {return date;}
 	public void setDate(Date date) {this.date = date;}
-
 
 	public Contract getContract() {return contract;}
 	public void setContract(Contract contract) {this.contract = contract;}
 
-    public Set<Unit> getUnits() {return units;}
-    public void setUnits(Set<Unit> units) {this.units = units;}
-
     public Set<InvoicePosition> getPositions() {return positions;}
-    public void setPositions(Set<InvoicePosition> positions) {this.positions = positions;}
 
+    public Double computeTotal() {
+        Double total = 0.0;
+        for(InvoicePosition invoicePosition: positions) total += invoicePosition.computeTotal();
+        return total;
+    }
 
     @Override
-    public String toString() {
+    public String getDictName() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
         return number + " от " +  simpleDateFormat.format(date);
     }

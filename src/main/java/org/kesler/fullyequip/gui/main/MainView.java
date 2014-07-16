@@ -67,11 +67,20 @@ class MainView extends JFrame {
             }
         });
 
+        JMenuItem closeMenuItem = new JMenuItem("Закрыть");
+        closeMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.exit();
+            }
+        });
+
         taskMenu.add(newUnitsMenuItem);
         taskMenu.add(newMoveMenuItem);
         taskMenu.add(placesEquipMenuItem);
         taskMenu.add(auctionsMenuItem);
         taskMenu.add(contractsMenuItem);
+        taskMenu.add(closeMenuItem);
 
 
         JMenu dictMenu = new JMenu("Справочники");

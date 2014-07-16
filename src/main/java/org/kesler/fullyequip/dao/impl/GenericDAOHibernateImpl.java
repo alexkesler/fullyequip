@@ -2,6 +2,8 @@ package org.kesler.fullyequip.dao.impl;
 
 import java.util.List;
 import java.util.ArrayList;
+
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.HibernateException;
@@ -148,8 +150,8 @@ public class GenericDAOHibernateImpl<T extends AbstractEntity> implements Generi
 		try {
 			log.info("Reading items");
 			notifyListeners(DAOState.READING);
-			list = session.createCriteria(type).list();
-			log.info("Readed " + list.size() + " items");
+			list = session.createCriteria(type).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+			log.info("Read " + list.size() + " items");
 			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			log.error("Error reading items", he);

@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "AuctionTypes")
-public class AuctionType extends DictEntity{
+public class AuctionType extends AbstractEntity implements DictEntity{
 
     @Column(name = "Name")
 	private String name;
@@ -22,7 +22,7 @@ public class AuctionType extends DictEntity{
 
 
     @Override
-    public String toString() {
+    public String getDictName() {
         return name;
     }
 

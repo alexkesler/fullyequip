@@ -2,11 +2,10 @@ package org.kesler.fullyequip.util;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.HibernateException;
 import java.util.Properties;
 
-import org.kesler.fullyequip.logic.UnitState;
+import org.kesler.fullyequip.logic.*;
 import org.kesler.fullyequip.util.OptionsUtil;
 
 public class HibernateUtil {
@@ -58,7 +57,8 @@ public class HibernateUtil {
 		hibernateProperties.setProperty("hibernate.c3p0.timeout","1800");
 		hibernateProperties.setProperty("hibernate.c3p0.max_statement","50");
 		hibernateProperties.setProperty("hibernate.hbm2ddl.auto","update");
-		hibernateProperties.setProperty("hibernate.show_sql","true");
+		hibernateProperties.setProperty("hibernate.show_sql","false");
+        hibernateProperties.setProperty("hibernate.format_sql","false");
 
 
 		Configuration hibernateConfiguration = new Configuration()
@@ -72,17 +72,8 @@ public class HibernateUtil {
 						.addAnnotatedClass(org.kesler.fullyequip.logic.UnitType.class)
                         .addAnnotatedClass(org.kesler.fullyequip.logic.UnitState.class)
                         .addAnnotatedClass(org.kesler.fullyequip.logic.UnitMove.class)
+                        .addAnnotatedClass(InvoicePosition.class)
 						.setProperties(hibernateProperties);
-
-		/// Пытаемся сконфигурировать Hibernate
-		// System.out.println("Configuring Hibernate ...");
-		// try {
-			// Читаем конфигурацию из hibernate.cfg.xml
-// 			hibernateConfiguration = hibernateConfiguration.configure();
-// 		} catch (HibernateException he) {
-// 			System.err.println("Hibernate configurationError");
-// 			he.printStackTrace();
-// 		}
 
 		System.out.println("Building Hibernate session factory ...");
 		try {

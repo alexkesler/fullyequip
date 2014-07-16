@@ -9,6 +9,7 @@ import static javax.persistence.FetchType.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.kesler.fullyequip.dao.AbstractEntity;
 import org.kesler.fullyequip.gui.dict.DictEntity;
 
 
@@ -18,7 +19,7 @@ import org.kesler.fullyequip.gui.dict.DictEntity;
 
 @Entity
 @Table(name = "Units")
-public class Unit extends DictEntity{
+public class Unit extends AbstractEntity implements DictEntity{
 
 	@Column(name="Name", length=255)
 	private String name;
@@ -41,10 +42,6 @@ public class Unit extends DictEntity{
 
     @Column(name="Quantity")
     private Long quantity; // Количество техники без инвентарников -  пилоты, патчкорды
-
-	@ManyToOne
-	@JoinColumn(name="InvoiceID", nullable = false)
-	private Invoice invoice;
 
     @ManyToOne
     @JoinColumn(name = "InvoicePositionID", nullable = false)
@@ -87,9 +84,6 @@ public class Unit extends DictEntity{
 	public Double getPrice() {return price;}
 	public void setPrice(Double price) {this.price = price;}
 
-	public Invoice getInvoice() {return invoice;}
-	public void setInvoice(Invoice invoice) {this.invoice = invoice;}
-
     public InvoicePosition getInvoicePosition() {return invoicePosition;}
     public void setInvoicePosition(InvoicePosition invoicePosition) {this.invoicePosition = invoicePosition;}
 
@@ -98,6 +92,10 @@ public class Unit extends DictEntity{
 
 	public Place getPlace() {return place;}
 	public void setPlace(Place place) {
+        this.place = place;
+    }
+
+    public void moveTo(Place place) {
         // если присваивается то же место, то ничего не делаем
         if (this.place!=null && this.place.equals(place)) return;
         if (this.place!=null) this.place.getUnits().remove(this); // удаляемся из старого расположения
@@ -110,16 +108,16 @@ public class Unit extends DictEntity{
         move.setPlace(place);
         move.setMoveDate(new Date());
         moves.add(move);
+
     }
 
     public UnitState getState() {return state;}
     public void setState(UnitState state) {this.state = state;}
 
     public Set<UnitMove> getMoves() {return moves;}
-    public void setMoves(Set<UnitMove> moves) {this.moves = moves;}
 
     @Override
-    public String toString() {
+    public String getDictName() {
         return name;
     }
 

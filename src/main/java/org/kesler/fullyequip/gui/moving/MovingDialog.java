@@ -99,7 +99,7 @@ public class MovingDialog extends AbstractDialog{
     private void selectNewPlace() {
         controller.selectNewPlace();
         Place place = controller.getMoving().getNewPlace();
-        newPlaceLabel.setText(place == null ? "Не опр" : place.toString());
+        newPlaceLabel.setText(place == null ? "Не опр" : place.getDictName());
 
     }
 

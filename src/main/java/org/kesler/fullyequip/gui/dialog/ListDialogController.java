@@ -1,5 +1,6 @@
 package org.kesler.fullyequip.gui.dialog;
 
+import org.kesler.fullyequip.dao.AbstractEntity;
 import org.kesler.fullyequip.gui.dialog.item.AbstractItemDialog;
 import org.kesler.fullyequip.gui.dialog.item.ItemDialogFactory;
 import org.kesler.fullyequip.gui.dict.DictEntity;
@@ -15,7 +16,7 @@ import javax.swing.*;
  * Контроллер для управления диалогом справочника
  * @param <T>
  */
-public class ListDialogController<T extends DictEntity> implements ModelStateListener {
+public class ListDialogController<T extends AbstractEntity & DictEntity> implements ModelStateListener {
 
     private Class<T> type;
     private String name;
@@ -34,7 +35,7 @@ public class ListDialogController<T extends DictEntity> implements ModelStateLis
 
 	}
 
-    public static <T extends DictEntity> ListDialogController<T> create(Class<T> type, String name) {
+    public static <T extends AbstractEntity & DictEntity> ListDialogController<T> create(Class<T> type, String name) {
          return new ListDialogController<T>(type, name);
     }
 
