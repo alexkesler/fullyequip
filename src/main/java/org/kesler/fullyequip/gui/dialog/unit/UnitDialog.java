@@ -174,13 +174,13 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
     protected void loadGUIFromItem() {
 
         Invoice invoice = invoicePosition.getInvoice();
-        String contractName = invoice==null?"Не определен":invoice.getContract().toString();
+        String contractName = invoice==null?"Не определен":invoice.getContract().getDictName();
 
         contractLabel.setText("<html>"
                 + contractName
                 + "</html>");
-        invoiceLabel.setText(invoice==null?"Не определена":invoice.toString());
-        placeLabel.setText(place==null?"Не определено":place.toString());
+        invoiceLabel.setText(invoice==null?"Не определена":invoice.getDictName());
+        placeLabel.setText(place==null?"Не определено":place.getDictName());
 
         unitTypeComboBox.setSelectedItem(item.getType());
         unitNameTextField.setText(item.getName());
@@ -339,7 +339,7 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
 
             switch (col) {
                 case 0:
-                    value = move.getPlace().toString();
+                    value = move.getPlace().getDictName();
                     break;
                 case 1:
                     value = simpleDateFormat.format(move.getMoveDate());

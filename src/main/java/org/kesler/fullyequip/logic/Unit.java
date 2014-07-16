@@ -9,6 +9,7 @@ import static javax.persistence.FetchType.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.kesler.fullyequip.dao.AbstractEntity;
 import org.kesler.fullyequip.gui.dict.DictEntity;
 
 
@@ -18,7 +19,7 @@ import org.kesler.fullyequip.gui.dict.DictEntity;
 
 @Entity
 @Table(name = "Units")
-public class Unit extends DictEntity{
+public class Unit extends AbstractEntity implements DictEntity{
 
 	@Column(name="Name", length=255)
 	private String name;
@@ -116,7 +117,7 @@ public class Unit extends DictEntity{
     public Set<UnitMove> getMoves() {return moves;}
 
     @Override
-    public String toString() {
+    public String getDictName() {
         return name;
     }
 

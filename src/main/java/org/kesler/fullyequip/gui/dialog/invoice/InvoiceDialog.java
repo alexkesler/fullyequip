@@ -2,7 +2,6 @@ package org.kesler.fullyequip.gui.dialog.invoice;
 
 import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
-import org.apache.log4j.lf5.util.ResourceUtils;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
 import org.kesler.fullyequip.logic.Contract;
 import org.kesler.fullyequip.logic.Invoice;
@@ -13,7 +12,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -180,7 +178,7 @@ public class InvoiceDialog extends AbstractDialog {
 
 
     protected void loadGUIFromInvoice() {
-        String contractName = invoice.getContract()==null?"Не определен":invoice.getContract().toString();
+        String contractName = invoice.getContract()==null?"Не определен":invoice.getContract().getDictName();
         contractLabel.setText("<html>"+contractName+"</html>");
         numberTextField.setText(invoice.getNumber());
         dateWebDateField.setDate(invoice.getDate());

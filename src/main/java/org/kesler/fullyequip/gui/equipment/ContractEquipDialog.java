@@ -4,7 +4,6 @@ import com.alee.extended.list.CheckBoxListModel;
 import com.alee.extended.list.WebCheckBoxList;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
-import org.kesler.fullyequip.gui.dialog.ListDialogController;
 import org.kesler.fullyequip.gui.dialog.invoice.InvoicePositionDialog;
 import org.kesler.fullyequip.logic.*;
 import org.kesler.fullyequip.util.ResourcesUtil;
@@ -210,7 +209,7 @@ public class ContractEquipDialog extends AbstractDialog {
     }
 
     private void loadGUIFromContract() {
-        contractLabel.setText("<html>" + contract.toString() + "</html>");
+        contractLabel.setText("<html>" + contract.getDictName() + "</html>");
         invoicesCheckBoxListModel.updateInvoices();
         updateInvoicePositions();
     }
@@ -400,7 +399,7 @@ public class ContractEquipDialog extends AbstractDialog {
                     value = invoicePosition.getName();
                     break;
                 case 2:
-                    value = invoicePosition.getUnitType()==null?"Не опр":invoicePosition.getUnitType().toString();
+                    value = invoicePosition.getUnitType()==null?"Не опр":invoicePosition.getUnitType().getDictName();
                     break;
                 case 3:
                     value = invoicePosition.getPrice()==null?"Не опр":NumberFormat.getInstance().format(invoicePosition.getPrice());

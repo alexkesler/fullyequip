@@ -186,7 +186,7 @@ public class ContractDialog extends AbstractItemDialog<Contract>{
 
     private void setAuction(Auction auction) {
         this.auction = auction;
-        auctionLabel.setText(auction==null?"Не определен":auction.toString());
+        auctionLabel.setText(auction==null?"Не определен":auction.getDictName());
 
     }
 

@@ -1,5 +1,6 @@
 package org.kesler.fullyequip.logic;
 
+import org.kesler.fullyequip.dao.AbstractEntity;
 import org.kesler.fullyequip.gui.dict.DictEntity;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "Auctions")
-public class Auction extends DictEntity {
+public class Auction extends AbstractEntity implements DictEntity {
 
     @Column(name="Name", length = 512)
 	private String name;
@@ -63,7 +64,7 @@ public class Auction extends DictEntity {
     public void setContract(Contract contract) {this.contract = contract;}
 
     @Override
-    public String toString() {
+    public String getDictName() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
         return name + " от " + simpleDateFormat.format(holdingDate);
     }

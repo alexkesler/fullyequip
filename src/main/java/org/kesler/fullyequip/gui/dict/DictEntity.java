@@ -1,13 +1,10 @@
 package org.kesler.fullyequip.gui.dict;
 
-import org.kesler.fullyequip.dao.AbstractEntity;
-
 /**
- * Created by alex on 10.02.14.
+ * Интерфейс для отображения сущности в справочниках
  */
-public abstract class DictEntity extends AbstractEntity {
+public interface DictEntity {
 
-    @Override
-    public abstract String toString();
+    public abstract String getDictName();
 
 }

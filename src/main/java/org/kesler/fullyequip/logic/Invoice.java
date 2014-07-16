@@ -1,6 +1,7 @@
 package org.kesler.fullyequip.logic;
 
 
+import org.kesler.fullyequip.dao.AbstractEntity;
 import org.kesler.fullyequip.gui.dict.DictEntity;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import static javax.persistence.FetchType.*;
 */
 @Entity
 @Table(name = "Invoices")
-public class Invoice extends DictEntity{
+public class Invoice extends AbstractEntity implements DictEntity{
 
     @Column(name = "Number", length = 255)
 	private String number;
@@ -55,7 +56,7 @@ public class Invoice extends DictEntity{
     }
 
     @Override
-    public String toString() {
+    public String getDictName() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
         return number + " от " +  simpleDateFormat.format(date);
     }

@@ -24,6 +24,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import net.miginfocom.swing.MigLayout;
+import org.kesler.fullyequip.dao.AbstractEntity;
 import org.kesler.fullyequip.gui.dict.DictEntity;
 import org.kesler.fullyequip.gui.util.InfoDialog;
 import org.kesler.fullyequip.util.ResourcesUtil;
@@ -32,7 +33,7 @@ import org.kesler.fullyequip.util.ResourcesUtil;
  * Диалог по умолчанию для справочников сущностей
  * @param <T> тип сущности
  */
-public class ListDialog<T extends DictEntity> extends AbstractDialog {
+public class ListDialog<T extends AbstractEntity & DictEntity> extends AbstractDialog {
 
 	public static final int VIEW_MODE=0;
 	public static final int VIEW_FILTER_MODE = 1;
@@ -335,7 +336,7 @@ public class ListDialog<T extends DictEntity> extends AbstractDialog {
 
 		@Override
 		public String getElementAt(int index) {
-			String value = items.get(index).toString();
+			String value = items.get(index).getDictName();
 			return value;
 		}
 
