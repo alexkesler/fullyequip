@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Locale;
 
 /**
  * Главное окно программы
@@ -22,6 +23,8 @@ class MainView extends JFrame {
         createGUI();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setLocale(new Locale("ru", "RU"));
+        getInputContext().selectInputMethod(new Locale("ru","RU"));
     }
 
     private void createGUI() {

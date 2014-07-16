@@ -66,6 +66,7 @@ public class HibernateUtil {
 						.addAnnotatedClass(org.kesler.fullyequip.logic.AuctionType.class)
 						.addAnnotatedClass(org.kesler.fullyequip.logic.Contract.class)
 						.addAnnotatedClass(org.kesler.fullyequip.logic.Invoice.class)
+                        .addAnnotatedClass(org.kesler.fullyequip.logic.InvoicePosition.class)
 						.addAnnotatedClass(org.kesler.fullyequip.logic.Place.class)
 						.addAnnotatedClass(org.kesler.fullyequip.logic.Supplier.class)
 						.addAnnotatedClass(org.kesler.fullyequip.logic.Unit.class)
