@@ -1,7 +1,7 @@
 package org.kesler.fullyequip.gui.moving;
 
 import org.kesler.fullyequip.gui.dialog.ListDialogController;
-import org.kesler.fullyequip.gui.equipment.PlaceEquipDialogController;
+import org.kesler.fullyequip.gui.receive.PlaceEquipDialogController;
 import org.kesler.fullyequip.logic.Moving;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;

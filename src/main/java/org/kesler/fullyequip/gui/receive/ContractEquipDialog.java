@@ -1,4 +1,4 @@
-package org.kesler.fullyequip.gui.equipment;
+package org.kesler.fullyequip.gui.receive;
 
 import com.alee.extended.list.CheckBoxListModel;
 import com.alee.extended.list.WebCheckBoxList;

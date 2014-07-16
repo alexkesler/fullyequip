@@ -1,4 +1,4 @@
-package org.kesler.fullyequip.gui.equipment;
+package org.kesler.fullyequip.gui.receive;
 
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;

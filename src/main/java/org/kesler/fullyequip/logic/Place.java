@@ -5,6 +5,7 @@ import org.kesler.fullyequip.dao.AbstractEntity;
 import org.kesler.fullyequip.gui.dict.DictEntity;
 
 import javax.persistence.*;
+import javax.persistence.criteria.Predicate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,8 +38,11 @@ public class Place extends AbstractEntity implements DictEntity{
 //    @Fetch(FetchMode.SUBSELECT)
     private Set<Unit> units;
 
+    @Column(name = "Initial")
+    private Boolean initial;
 
-	public Place() {
+
+    public Place() {
         units = new HashSet<Unit>();
     }
 
@@ -72,6 +76,11 @@ public class Place extends AbstractEntity implements DictEntity{
     public void setStorage(Boolean storage) {this.storage = storage;}
 
     public Set<Unit> getUnits() {return units;}
+
+    public Boolean getInitial() { return initial; }
+    public Boolean isInitial() { return initial; }
+    public void setInitial(Boolean initial) { this.initial = initial; }
+
 
     @Override
     public String getDictName() {

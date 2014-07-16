@@ -1,4 +1,4 @@
-package org.kesler.fullyequip.gui.equipment;
+package org.kesler.fullyequip.gui.receive;
 
 import org.kesler.fullyequip.gui.dialog.invoice.InvoiceDialog;
 import org.kesler.fullyequip.logic.Contract;
