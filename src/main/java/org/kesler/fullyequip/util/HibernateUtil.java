@@ -73,7 +73,6 @@ public class HibernateUtil {
 						.addAnnotatedClass(org.kesler.fullyequip.logic.UnitType.class)
                         .addAnnotatedClass(org.kesler.fullyequip.logic.UnitState.class)
                         .addAnnotatedClass(org.kesler.fullyequip.logic.UnitMove.class)
-                        .addAnnotatedClass(InvoicePosition.class)
 						.setProperties(hibernateProperties);
 
 		System.out.println("Building Hibernate session factory ...");
