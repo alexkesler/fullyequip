@@ -1,6 +1,7 @@
 package org.kesler.fullyequip.gui.main;
 
 import net.miginfocom.swing.MigLayout;
+import org.kesler.fullyequip.util.ResourcesUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,6 +72,7 @@ class MainView extends JFrame {
         });
 
         JMenuItem closeMenuItem = new JMenuItem("Закрыть");
+        closeMenuItem.setIcon(ResourcesUtil.getIcon("door_out.png"));
         closeMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
