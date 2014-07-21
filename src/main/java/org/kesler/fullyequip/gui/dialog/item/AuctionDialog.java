@@ -46,7 +46,6 @@ public class AuctionDialog extends AbstractItemDialog<Auction>{
 
         auctionTypeComboBox = new JComboBox<AuctionType>(new AuctionTypeComboBoxModel());
 
-
         numberTextField = new JTextField(20);
         nameTextArea = new JTextArea();
         JScrollPane nameTextAreaScrollPane = new JScrollPane(nameTextArea);

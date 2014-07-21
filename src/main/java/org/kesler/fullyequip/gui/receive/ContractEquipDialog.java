@@ -5,6 +5,7 @@ import com.alee.extended.list.WebCheckBoxList;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
 import org.kesler.fullyequip.gui.dialog.invoice.InvoicePositionDialog;
+import org.kesler.fullyequip.gui.dialog.invoice.InvoicePositionUnitsDialog;
 import org.kesler.fullyequip.logic.*;
 import org.kesler.fullyequip.util.ResourcesUtil;
 
@@ -248,10 +249,16 @@ public class ContractEquipDialog extends AbstractDialog {
             JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано", "Ошибка", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        InvoicePositionDialog invoicePositionDialog = new InvoicePositionDialog(currentDialog, selectedInvoicePosition);
-        invoicePositionDialog.setVisible(true);
-        if(invoicePositionDialog.getResult() == InvoicePositionDialog.OK) {
+        if (selectedInvoicePosition.isInvReg()) {
+            InvoicePositionUnitsDialog invoicePositionUnitsDialog = new InvoicePositionUnitsDialog(currentDialog,selectedInvoicePosition);
+            invoicePositionUnitsDialog.setVisible(true);
             updateInvoicePositions();
+        } else {
+            InvoicePositionDialog invoicePositionDialog = new InvoicePositionDialog(currentDialog, selectedInvoicePosition);
+            invoicePositionDialog.setVisible(true);
+            if(invoicePositionDialog.getResult() == InvoicePositionDialog.OK) {
+                updateInvoicePositions();
+            }
         }
 
     }

@@ -24,8 +24,10 @@ public class UnitStateModel extends DefaultModel<UnitState> {
             if(state.isInitial()) initialState = state;
         }
 
-        if(initialState == null) initialState = createInitialState();
-        addItem(initialState);
+        if(initialState == null) {
+            initialState = createInitialState();
+            addItem(initialState);
+        }
 
         return initialState;
     }
@@ -34,7 +36,7 @@ public class UnitStateModel extends DefaultModel<UnitState> {
         log.info("Creating new initial UnitState");
         UnitState initialState = new UnitState();
 
-        initialState.setName("На складе");
+        initialState.setName("У поставщика");
         initialState.setInitial(true);
 
 

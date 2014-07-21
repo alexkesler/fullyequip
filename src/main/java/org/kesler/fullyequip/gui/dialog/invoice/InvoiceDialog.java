@@ -218,11 +218,14 @@ public class InvoiceDialog extends AbstractDialog {
             JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано", "Ошибка", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         InvoicePositionDialog invoicePositionDialog = new InvoicePositionDialog(currentDialog, selectedInvoicePosition);
         invoicePositionDialog.setVisible(true);
         if(invoicePositionDialog.getResult() == InvoicePositionDialog.OK) {
             updateInvoicePositions();
         }
+
+
 
     }
 

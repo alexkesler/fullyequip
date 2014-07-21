@@ -24,8 +24,10 @@ public class PlaceModel extends DefaultModel<Place> {
             if(place.isInitial()) initialPlace = place;
         }
 
-        if(initialPlace == null) initialPlace = createInitialPlace();
-        addItem(initialPlace);
+        if(initialPlace == null) {
+            initialPlace = createInitialPlace();
+            addItem(initialPlace);
+        }
 
         return initialPlace;
 
