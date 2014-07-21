@@ -28,7 +28,7 @@ public class UnitType extends AbstractEntity implements DictEntity{
 	public void setName(String name) {this.name = name;}
 
     @Override
-    public String getDictName() {
+    public String toString() {
         return name;
     }
 

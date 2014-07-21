@@ -64,7 +64,7 @@ public class Auction extends AbstractEntity implements DictEntity {
     public void setContract(Contract contract) {this.contract = contract;}
 
     @Override
-    public String getDictName() {
+    public String toString() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
         return name + " от " + simpleDateFormat.format(holdingDate);
     }

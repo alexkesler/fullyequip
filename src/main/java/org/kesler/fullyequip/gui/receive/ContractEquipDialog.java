@@ -209,7 +209,7 @@ public class ContractEquipDialog extends AbstractDialog {
     }
 
     private void loadGUIFromContract() {
-        contractLabel.setText("<html>" + contract.getDictName() + "</html>");
+        contractLabel.setText("<html>" + contract.toString() + "</html>");
         invoicesCheckBoxListModel.updateInvoices();
         updateInvoicePositions();
     }
@@ -399,7 +399,7 @@ public class ContractEquipDialog extends AbstractDialog {
                     value = invoicePosition.getName();
                     break;
                 case 2:
-                    value = invoicePosition.getUnitType()==null?"Не опр":invoicePosition.getUnitType().getDictName();
+                    value = invoicePosition.getUnitType()==null?"Не опр":invoicePosition.getUnitType().toString();
                     break;
                 case 3:
                     value = invoicePosition.getPrice()==null?"Не опр":NumberFormat.getInstance().format(invoicePosition.getPrice());

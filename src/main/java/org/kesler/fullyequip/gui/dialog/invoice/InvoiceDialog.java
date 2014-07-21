@@ -178,7 +178,7 @@ public class InvoiceDialog extends AbstractDialog {
 
 
     protected void loadGUIFromInvoice() {
-        String contractName = invoice.getContract()==null?"Не определен":invoice.getContract().getDictName();
+        String contractName = invoice.getContract()==null?"Не определен":invoice.getContract().toString();
         contractLabel.setText("<html>"+contractName+"</html>");
         numberTextField.setText(invoice.getNumber());
         dateWebDateField.setDate(invoice.getDate());

@@ -5,6 +5,6 @@ package org.kesler.fullyequip.gui.dict;
  */
 public interface DictEntity {
 
-    public abstract String getDictName();
+    public abstract String toString();
 
 }

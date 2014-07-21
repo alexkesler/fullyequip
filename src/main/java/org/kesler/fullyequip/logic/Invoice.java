@@ -56,7 +56,7 @@ public class Invoice extends AbstractEntity implements DictEntity{
     }
 
     @Override
-    public String getDictName() {
+    public String toString() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
         return number + " от " +  simpleDateFormat.format(date);
     }

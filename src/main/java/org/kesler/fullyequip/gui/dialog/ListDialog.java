@@ -336,7 +336,7 @@ public class ListDialog<T extends AbstractEntity & DictEntity> extends AbstractD
 
 		@Override
 		public String getElementAt(int index) {
-			String value = items.get(index).getDictName();
+			String value = items.get(index).toString();
 			return value;
 		}
 

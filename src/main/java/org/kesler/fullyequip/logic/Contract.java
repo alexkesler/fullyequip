@@ -73,7 +73,7 @@ public class Contract extends AbstractEntity implements DictEntity{
     }
 
     @Override
-    public String getDictName() {
+    public String toString() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
         String supplierName = supplier == null ? "" : " c " + supplier.getName();
         return number + " от " + simpleDateFormat.format(date) +  supplierName;

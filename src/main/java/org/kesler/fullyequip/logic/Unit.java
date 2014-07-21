@@ -117,7 +117,7 @@ public class Unit extends AbstractEntity implements DictEntity{
     public Set<UnitMove> getMoves() {return moves;}
 
     @Override
-    public String getDictName() {
+    public String toString() {
         return name;
     }
 

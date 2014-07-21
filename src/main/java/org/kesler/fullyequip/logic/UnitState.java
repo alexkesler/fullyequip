@@ -35,7 +35,7 @@ public class UnitState extends AbstractEntity implements DictEntity{
 
 
     @Override
-    public String getDictName() {
+    public String toString() {
         return name;
     }
 
