@@ -3,15 +3,20 @@ package org.kesler.fullyequip.gui.dialog.unit;
 import com.alee.extended.panel.CollapsiblePaneAdapter;
 import com.alee.extended.panel.WebCollapsiblePane;
 import net.miginfocom.swing.MigLayout;
+import org.kesler.fullyequip.gui.dialog.ListDialogController;
+import org.kesler.fullyequip.gui.dialog.ListDialogFactory;
 import org.kesler.fullyequip.gui.dialog.item.AbstractItemDialog;
 import org.kesler.fullyequip.logic.*;
 import org.kesler.fullyequip.logic.model.*;
+import org.kesler.fullyequip.util.ResourcesUtil;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.text.NumberFormatter;
 import java.awt.Font;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,12 +29,13 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
 
     private InvoicePosition invoicePosition;
     private Place place;
-    private UnitState state;
+
 
     private JLabel contractLabel;
     private JLabel invoiceLabel;
     private JLabel placeLabel;
 
+    private UnitTypeComboBoxModel unitTypeComboBoxModel;
     private JComboBox<UnitType> unitTypeComboBox;
     private JComboBox<UnitState> unitStateComboBox;
     private JTextField unitNameTextField;
@@ -68,11 +74,26 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
         invoiceLabel = new JLabel("Не опеределена");
 
         placeLabel = new JLabel("Не определено");
+        JButton selectPlaceButton = new JButton(ResourcesUtil.getIcon("book_previous.png"));
+        selectPlaceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectPlace();
+            }
+        });
 
         JPanel equipPanel = new JPanel(new MigLayout("fill"));
-        equipPanel.setBorder(BorderFactory.createEtchedBorder());
+        equipPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Оборудование"));
 
-        unitTypeComboBox = new JComboBox<UnitType>(new UnitTypeComboBoxModel());
+        unitTypeComboBoxModel = new UnitTypeComboBoxModel();
+        unitTypeComboBox = new JComboBox<UnitType>(unitTypeComboBoxModel);
+        JButton editUnitTypesButton  =new JButton(ResourcesUtil.getIcon("table_edit.png"));
+        editUnitTypesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editUnitTypes();
+            }
+        });
 
         unitNameTextField = new JTextField(20);
         serialNumTextField = new JTextField(15);
@@ -81,7 +102,8 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
         quantityTextField = new JFormattedTextField(new NumberFormatter(NumberFormat.getIntegerInstance()));
 
         equipPanel.add(new JLabel("Тип: "));
-        equipPanel.add(unitTypeComboBox, "wrap");
+        equipPanel.add(unitTypeComboBox);
+        equipPanel.add(editUnitTypesButton, "wrap");
         equipPanel.add(new JLabel("Наименование: "));
         equipPanel.add(unitNameTextField, "wrap");
         equipPanel.add(new JLabel("Серийный номер: "));
@@ -95,7 +117,7 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
         equipPanel.add(quantityTextField, "w 50, wrap");
 
         JPanel statePanel = new JPanel(new MigLayout("fill"));
-        statePanel.setBorder(BorderFactory.createEtchedBorder());
+        statePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Состояние"));
 
         unitStateComboBox = new JComboBox<UnitState>(new UnitStateComboBoxModel());
 
@@ -153,9 +175,10 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
         dataPanel.add(new JLabel("Накладная: "));
         dataPanel.add(invoiceLabel, "wrap");
         dataPanel.add(new JLabel("Размещение: "));
-        dataPanel.add(placeLabel, "wrap");
+        dataPanel.add(placeLabel);
+        dataPanel.add(selectPlaceButton, "wrap");
         dataPanel.add(equipPanel, "span, grow");
-        dataPanel.add(statePanel, "span");
+        dataPanel.add(statePanel, "span, growx");
         dataPanel.add(unitMoveWebCollapsiblePane,"span");
 
         return dataPanel;
@@ -173,6 +196,7 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
     protected void loadGUIFromItem() {
 
         Invoice invoice = item.getInvoicePosition().getInvoice();
+        place = item.getPlace();
         String contractName = invoice==null?"Не определен":invoice.getContract().toString();
 
         contractLabel.setText("<html>"
@@ -248,6 +272,14 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
         return false;
     }
 
+    void editUnitTypes() {
+        UnitType selectedUnitType = ListDialogFactory.showselectUnitTypeListDialog(currentDialog);
+        if (selectedUnitType!=null) {
+            unitTypeComboBoxModel.update();
+            unitTypeComboBox.setSelectedItem(selectedUnitType);
+        }
+    }
+
     // Модель для типов оборудования
     class UnitTypeComboBoxModel extends DefaultComboBoxModel<UnitType> implements ModelStateListener {
 
@@ -257,6 +289,10 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
             model = new DefaultModel<UnitType>(UnitType.class);
             model.addModelStateListener(this);
             model.readItemsInSeparateThread();
+        }
+
+        void update() {
+            model.readItemsFromDB();
         }
 
         @Override
@@ -281,6 +317,10 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
             model.readItemsInSeparateThread();
         }
 
+        void update() {
+
+        }
+
         @Override
         public void modelStateChanged(ModelState state) {
             if(state == ModelState.UPDATED) {
@@ -289,6 +329,14 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
                 for(UnitState unitState: unitStates) addElement(unitState);
             }
 
+        }
+    }
+
+    void selectPlace() {
+        Place selectedPlace = ListDialogController.create(Place.class,"Размещения").showSelectDialog(currentDialog);
+        if(selectedPlace!=null) {
+            place = selectedPlace;
+            placeLabel.setText(place.getName());
         }
     }
 

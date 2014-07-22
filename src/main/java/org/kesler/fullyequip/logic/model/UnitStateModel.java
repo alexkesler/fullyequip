@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by alex on 12.04.14.
+ * Модель управления состояниями оборудования
  */
 public class UnitStateModel extends DefaultModel<UnitState> {
     private final static UnitStateModel instance = new UnitStateModel();
@@ -27,7 +27,7 @@ public class UnitStateModel extends DefaultModel<UnitState> {
             readItemsFromDB();
             List<UnitState> states = getAllItems();
             for(UnitState state: states) {
-                if(state.isInitial()) initialState = state;
+                if(state.isInitial()!=null && state.isInitial()) initialState = state;
             }
 
         }

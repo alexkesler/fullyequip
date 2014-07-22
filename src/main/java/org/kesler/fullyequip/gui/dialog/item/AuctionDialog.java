@@ -2,17 +2,21 @@ package org.kesler.fullyequip.gui.dialog.item;
 
 import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
+import org.kesler.fullyequip.gui.dialog.ListDialogFactory;
 import org.kesler.fullyequip.gui.dict.DictListSellRenderer;
 import org.kesler.fullyequip.logic.Auction;
 import org.kesler.fullyequip.logic.AuctionType;
 import org.kesler.fullyequip.logic.model.DefaultModel;
 import org.kesler.fullyequip.logic.model.ModelState;
 import org.kesler.fullyequip.logic.model.ModelStateListener;
+import org.kesler.fullyequip.util.ResourcesUtil;
 
 import javax.swing.*;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +26,9 @@ import java.util.List;
  */
 public class AuctionDialog extends AbstractItemDialog<Auction>{
 
+    private AuctionTypeComboBoxModel auctionTypeComboBoxModel;
     private JComboBox<AuctionType> auctionTypeComboBox;
+    private AuctionType selectedAuctionType;
     private JTextField numberTextField;
     private JTextArea nameTextArea;
     private JFormattedTextField priceTextField;
@@ -43,8 +49,15 @@ public class AuctionDialog extends AbstractItemDialog<Auction>{
 
         JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
-
-        auctionTypeComboBox = new JComboBox<AuctionType>(new AuctionTypeComboBoxModel());
+        auctionTypeComboBoxModel = new AuctionTypeComboBoxModel();
+        auctionTypeComboBox = new JComboBox<AuctionType>(auctionTypeComboBoxModel);
+        JButton editAuctionTypesButton = new JButton(ResourcesUtil.getIcon("table_edit.png"));
+        editAuctionTypesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editAuctionTypes();
+            }
+        });
 
         numberTextField = new JTextField(20);
         nameTextArea = new JTextArea();
@@ -57,7 +70,8 @@ public class AuctionDialog extends AbstractItemDialog<Auction>{
         holdingDateWebDateField = new WebDateField();
 
         dataPanel.add(new JLabel("Тип аукциона"));
-        dataPanel.add(auctionTypeComboBox, "pushx, growx, wrap");
+        dataPanel.add(auctionTypeComboBox, "pushx, growx");
+        dataPanel.add(editAuctionTypesButton, "wrap");
         dataPanel.add(new JLabel("Номер"));
         dataPanel.add(numberTextField, "wrap");
         dataPanel.add(new JLabel("Наименование"), "wrap");
@@ -139,6 +153,14 @@ public class AuctionDialog extends AbstractItemDialog<Auction>{
         return false;
     }
 
+    private void editAuctionTypes() {
+        AuctionType selectedAuctionType = ListDialogFactory.showSelectAuctionTypeListDialog(currentDialog);
+        if (selectedAuctionType!=null) {
+            auctionTypeComboBoxModel.update();
+            auctionTypeComboBox.setSelectedItem(selectedAuctionType);
+        }
+    }
+
     class AuctionTypeComboBoxModel extends DefaultComboBoxModel<AuctionType> implements ModelStateListener {
         private DefaultModel<AuctionType> model;
 
@@ -146,6 +168,10 @@ public class AuctionDialog extends AbstractItemDialog<Auction>{
             this.model = new DefaultModel<AuctionType>(AuctionType.class);
             model.addModelStateListener(this);
             model.readItemsInSeparateThread();
+        }
+
+        void update() {
+            model.readItemsFromDB();
         }
 
         @Override

@@ -25,7 +25,7 @@ public class PlaceModel extends DefaultModel<Place> {
             readItemsFromDB();
             List<Place> places = getAllItems();
             for(Place place: places) {
-                if(place.isInitial()) initialPlace = place;
+                if(place.isInitial()!=null && place.isInitial()) initialPlace = place;
             }
         }
 

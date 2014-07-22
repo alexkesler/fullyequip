@@ -2,6 +2,7 @@ package org.kesler.fullyequip.gui.dialog.invoice;
 
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
+import org.kesler.fullyequip.gui.dialog.ListDialogFactory;
 import org.kesler.fullyequip.gui.dict.DictListSellRenderer;
 import org.kesler.fullyequip.logic.Invoice;
 import org.kesler.fullyequip.logic.InvoicePosition;
@@ -9,6 +10,7 @@ import org.kesler.fullyequip.logic.UnitType;
 import org.kesler.fullyequip.logic.model.DefaultModel;
 import org.kesler.fullyequip.logic.model.ModelState;
 import org.kesler.fullyequip.logic.model.ModelStateListener;
+import org.kesler.fullyequip.util.ResourcesUtil;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
@@ -24,6 +26,7 @@ public class InvoicePositionDialog extends AbstractDialog {
 
     private InvoicePosition invoicePosition;
 
+    private UnitTypeComboBoxModel unitTypeComboBoxModel;
     private JComboBox<UnitType> unitTypeComboBox;
     private JTextField unitNameTextField;
     private JFormattedTextField priceTextField;
@@ -59,14 +62,23 @@ public class InvoicePositionDialog extends AbstractDialog {
 
         JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
-        unitTypeComboBox = new JComboBox<UnitType>(new UnitTypeComboBoxModel());
+        unitTypeComboBoxModel = new UnitTypeComboBoxModel();
+        unitTypeComboBox = new JComboBox<UnitType>(unitTypeComboBoxModel);
+        JButton editUnitTypesButton = new JButton(ResourcesUtil.getIcon("table_edit.png"));
+        editUnitTypesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editUnitTypes();
+            }
+        });
         unitNameTextField = new JTextField(15);
         priceTextField = new JFormattedTextField(new NumberFormatter(NumberFormat.getNumberInstance()));
         quantityTextField = new JFormattedTextField(new NumberFormatter(NumberFormat.getIntegerInstance()));
         invRegCheckBox = new JCheckBox();
 
         dataPanel.add(new JLabel("Тип оборудования"));
-        dataPanel.add(unitTypeComboBox,"wrap");
+        dataPanel.add(unitTypeComboBox);
+        dataPanel.add(editUnitTypesButton, "wrap");
         dataPanel.add(new JLabel("Наименование"));
         dataPanel.add(unitNameTextField, "wrap");
         dataPanel.add(new JLabel("Цена"));
@@ -135,6 +147,15 @@ public class InvoicePositionDialog extends AbstractDialog {
         invRegCheckBox.setSelected(invoicePosition.isInvReg()==null?false:invoicePosition.isInvReg());
     }
 
+    void editUnitTypes() {
+        UnitType selectedUnitType = ListDialogFactory.showselectUnitTypeListDialog(currentDialog);
+        if (selectedUnitType!=null) {
+            unitTypeComboBoxModel.update();
+            unitTypeComboBox.setSelectedItem(selectedUnitType);
+
+        }
+    }
+
     // Модель для типов оборудования
     class UnitTypeComboBoxModel extends DefaultComboBoxModel<UnitType> implements ModelStateListener {
 
@@ -144,6 +165,10 @@ public class InvoicePositionDialog extends AbstractDialog {
             model = new DefaultModel<UnitType>(UnitType.class);
             model.addModelStateListener(this);
             model.readItemsInSeparateThread();
+        }
+
+        void update() {
+            model.readItemsFromDB();
         }
 
         @Override
