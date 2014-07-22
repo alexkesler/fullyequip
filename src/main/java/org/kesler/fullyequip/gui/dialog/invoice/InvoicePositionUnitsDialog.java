@@ -2,6 +2,7 @@ package org.kesler.fullyequip.gui.dialog.invoice;
 
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
+import org.kesler.fullyequip.gui.dialog.unit.UnitDialog;
 import org.kesler.fullyequip.logic.InvoicePosition;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
@@ -9,9 +10,12 @@ import org.kesler.fullyequip.logic.UnitState;
 import org.kesler.fullyequip.logic.model.PlaceModel;
 import org.kesler.fullyequip.logic.model.UnitStateModel;
 
+
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -27,6 +31,8 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
     private InvoicePosition invoicePosition;
     private UnitsTableModel unitsTableModel;
 
+    private Unit selectedUnit;
+
     public InvoicePositionUnitsDialog(JDialog parentDialog, InvoicePosition invoicePosition) {
         super(parentDialog,"Оборудование по позиции накладной", true);
         this.invoicePosition = invoicePosition;
@@ -36,9 +42,9 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
     }
 
     private void createUnits() {
-        PlaceModel placeModel = new PlaceModel();
+        PlaceModel placeModel = PlaceModel.getInstance();
         Place initialPlace = placeModel.getInitialPlace();
-        UnitStateModel unitStateModel = new UnitStateModel();
+        UnitStateModel unitStateModel = UnitStateModel.getInstance();
         UnitState unitState = unitStateModel.getInitialState();
         if(invoicePosition.isInvReg() && invoicePosition.getUnits().size()==0) {
             for(int i=0;i<invoicePosition.getQuantity();i++) {
@@ -62,19 +68,26 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
 
         unitsTableModel = new UnitsTableModel();
         JTable unitsTable = new JTable(unitsTableModel);
+        unitsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        unitsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                selectedUnit = unitsTableModel.getUnitAt(e.getFirstIndex());
+            }
+        });
         unitsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount()==2) {
-
+                    editUnit();
                 }
             }
         });
         JScrollPane unitsTableScrollPane = new JScrollPane(unitsTable);
 
 
+
         dataPanel.add(unitsTableScrollPane, "grow, span");
-        dataPanel.add(new JLabel("Назначить инвентарные начиная с "));
 
         JPanel buttonPanel = new JPanel();
 
@@ -95,12 +108,32 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
         pack();
     }
 
+    void editUnit() {
+        if(selectedUnit==null) {
+            JOptionPane.showMessageDialog(currentDialog,"Ничего не выбрано", "Внимание", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        UnitDialog unitDialog = new UnitDialog(currentDialog, selectedUnit);
+        unitDialog.setVisible(true);
+        unitsTableModel.updateUnits();
+    }
+
     class UnitsTableModel extends AbstractTableModel {
         private List<Unit> units;
 
         UnitsTableModel() {
             units = new ArrayList<Unit>(invoicePosition.getUnits());
         }
+
+        Unit getUnitAt(int index) {
+            return units.get(index);
+        }
+
+        void updateUnits() {
+            units = new ArrayList<Unit>(invoicePosition.getUnits());
+            fireTableDataChanged();
+        }
+
 
         @Override
         public int getRowCount() {

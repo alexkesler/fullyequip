@@ -5,10 +5,7 @@ import com.alee.extended.panel.WebCollapsiblePane;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.item.AbstractItemDialog;
 import org.kesler.fullyequip.logic.*;
-import org.kesler.fullyequip.logic.model.DefaultModel;
-import org.kesler.fullyequip.logic.model.ModelState;
-import org.kesler.fullyequip.logic.model.ModelStateListener;
-import org.kesler.fullyequip.logic.model.UnitStateModel;
+import org.kesler.fullyequip.logic.model.*;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -46,10 +43,9 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
 
 
     // Создаем новое оборудование по указанной накладной и помещаем его в указанное место
-    public UnitDialog(JDialog parentDialog, InvoicePosition invoicePosition, Place place) {
+    public UnitDialog(JDialog parentDialog, InvoicePosition invoicePosition) {
         super(parentDialog, "Создать оборудование");
         this.invoicePosition = invoicePosition;
-        this.place = place;
         loadGUIFromItem();
     }
 
@@ -168,12 +164,15 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
     @Override
     protected void createNewItem() {
         item = new Unit();
+        item.setInvoicePosition(invoicePosition);
+        item.setPlace(PlaceModel.getInstance().getInitialPlace());
+        item.setState(UnitStateModel.getInstance().getInitialState());
     }
 
     @Override
     protected void loadGUIFromItem() {
 
-        Invoice invoice = invoicePosition.getInvoice();
+        Invoice invoice = item.getInvoicePosition().getInvoice();
         String contractName = invoice==null?"Не определен":invoice.getContract().toString();
 
         contractLabel.setText("<html>"
@@ -277,7 +276,7 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
         private UnitStateModel model;
 
         UnitStateComboBoxModel() {
-            model = new UnitStateModel();
+            model = UnitStateModel.getInstance();
             model.addModelStateListener(this);
             model.readItemsInSeparateThread();
         }

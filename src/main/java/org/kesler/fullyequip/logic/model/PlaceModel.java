@@ -9,19 +9,24 @@ import java.util.List;
  * Модель для Размещения, добавляет формирование начального места
  */
 public class PlaceModel extends DefaultModel<Place> {
+    private static PlaceModel instance = new PlaceModel();
+    private Place initialPlace;
 
-    public PlaceModel() {
+    private PlaceModel() {
         super(Place.class);
         log = Logger.getLogger("PlaceModel");
     }
 
-    public Place getInitialPlace() {
-        Place initialPlace = null;
+    public static synchronized PlaceModel getInstance() {return instance;}
 
-        readItemsFromDB();
-        List<Place> places = getAllItems();
-        for(Place place: places) {
-            if(place.isInitial()) initialPlace = place;
+    public Place getInitialPlace() {
+
+        if (initialPlace == null) {
+            readItemsFromDB();
+            List<Place> places = getAllItems();
+            for(Place place: places) {
+                if(place.isInitial()) initialPlace = place;
+            }
         }
 
         if(initialPlace == null) {

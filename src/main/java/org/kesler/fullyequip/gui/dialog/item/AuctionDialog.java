@@ -50,10 +50,10 @@ public class AuctionDialog extends AbstractItemDialog<Auction>{
         nameTextArea = new JTextArea();
         JScrollPane nameTextAreaScrollPane = new JScrollPane(nameTextArea);
         priceTextField = new JFormattedTextField();
-        NumberFormatter currencyFormatter = new NumberFormatter(NumberFormat.getCurrencyInstance());
-        DefaultFormatterFactory currencyFormatterFactory = new DefaultFormatterFactory(currencyFormatter,
-                                                                currencyFormatter, currencyFormatter);
-        priceTextField.setFormatterFactory(currencyFormatterFactory);
+        NumberFormatter numberFormatter = new NumberFormatter(NumberFormat.getNumberInstance());
+        DefaultFormatterFactory numberFormatterFactory = new DefaultFormatterFactory(numberFormatter,
+                numberFormatter, numberFormatter);
+        priceTextField.setFormatterFactory(numberFormatterFactory);
         holdingDateWebDateField = new WebDateField();
 
         dataPanel.add(new JLabel("Тип аукциона"));
@@ -102,7 +102,6 @@ public class AuctionDialog extends AbstractItemDialog<Auction>{
         AuctionType type = (AuctionType) auctionTypeComboBox.getSelectedItem();
         String number = numberTextField.getText();
         String name = nameTextArea.getText();
-//        String priceString = priceTextField.getText();
         Float price = ((Number) priceTextField.getValue()).floatValue();
 //        try {
 //            price = Float.parseFloat(priceString);

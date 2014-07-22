@@ -3,25 +3,33 @@ package org.kesler.fullyequip.logic.model;
 import org.apache.log4j.Logger;
 import org.kesler.fullyequip.logic.UnitState;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by alex on 12.04.14.
  */
 public class UnitStateModel extends DefaultModel<UnitState> {
+    private final static UnitStateModel instance = new UnitStateModel();
+    private UnitState initialState;
 
-    public UnitStateModel() {
+
+    private UnitStateModel() {
         super(UnitState.class);
         log = Logger.getLogger("UnitStateModel");
-    }
+     }
+
+    public static synchronized UnitStateModel getInstance() {return instance;}
 
     public UnitState getInitialState() {
-        UnitState initialState = null;
 
-        readItemsFromDB();
-        List<UnitState> states = getAllItems();
-        for(UnitState state: states) {
-            if(state.isInitial()) initialState = state;
+        if(initialState == null) {
+            readItemsFromDB();
+            List<UnitState> states = getAllItems();
+            for(UnitState state: states) {
+                if(state.isInitial()) initialState = state;
+            }
+
         }
 
         if(initialState == null) {
