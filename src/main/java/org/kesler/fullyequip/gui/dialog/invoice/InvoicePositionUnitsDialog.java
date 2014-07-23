@@ -2,6 +2,7 @@ package org.kesler.fullyequip.gui.dialog.invoice;
 
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
+import org.kesler.fullyequip.gui.dialog.ListDialogFactory;
 import org.kesler.fullyequip.gui.dialog.unit.UnitDialog;
 import org.kesler.fullyequip.logic.InvoicePosition;
 import org.kesler.fullyequip.logic.Place;
@@ -9,13 +10,14 @@ import org.kesler.fullyequip.logic.Unit;
 import org.kesler.fullyequip.logic.UnitState;
 import org.kesler.fullyequip.logic.model.PlaceModel;
 import org.kesler.fullyequip.logic.model.UnitStateModel;
+import org.kesler.fullyequip.util.ResourcesUtil;
 
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -41,30 +43,29 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
         setLocationRelativeTo(parentDialog);
     }
 
-    private void createUnits() {
-        PlaceModel placeModel = PlaceModel.getInstance();
-        Place initialPlace = placeModel.getInitialPlace();
-        UnitStateModel unitStateModel = UnitStateModel.getInstance();
-        UnitState unitState = unitStateModel.getInitialState();
-        if(invoicePosition.isInvReg() && invoicePosition.getUnits().size()==0) {
-            for(int i=0;i<invoicePosition.getQuantity();i++) {
-                Unit unit = new Unit();
-                unit.setInvoicePosition(invoicePosition);
-                unit.setName(invoicePosition.getName());
-                unit.setPrice(invoicePosition.getPrice());
-                unit.setType(invoicePosition.getUnitType());
-                unit.setPlace(initialPlace);
-                unit.setState(unitState);
-                unit.setQuantity(1L);
-                invoicePosition.getUnits().add(unit);
-            }
-        }
-    }
-
     private void createGUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         JPanel dataPanel = new JPanel(new MigLayout("fill"));
+
+        JButton selectPlaceButton = new JButton(ResourcesUtil.getIcon("building.png"));
+        selectPlaceButton.setToolTipText("Выбрать размещение");
+        selectPlaceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectPlace();
+            }
+        });
+
+        JButton processInvNumbersButton = new JButton(ResourcesUtil.getIcon("table_lightning.png"));
+        processInvNumbersButton.setToolTipText("Назначить инвентарные");
+        processInvNumbersButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                processInvNumbers();
+            }
+        });
+
 
         unitsTableModel = new UnitsTableModel();
         JTable unitsTable = new JTable(unitsTableModel);
@@ -86,7 +87,9 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
         JScrollPane unitsTableScrollPane = new JScrollPane(unitsTable);
 
 
-
+        dataPanel.add(new JLabel(), "span, split 3, growx");
+        dataPanel.add(selectPlaceButton);
+        dataPanel.add(processInvNumbersButton);
         dataPanel.add(unitsTableScrollPane, "grow, span");
 
         JPanel buttonPanel = new JPanel();
@@ -106,6 +109,66 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
 
         setContentPane(mainPanel);
         pack();
+    }
+
+    private void createUnits() {
+        PlaceModel placeModel = PlaceModel.getInstance();
+        Place initialPlace = placeModel.getInitialPlace();
+        UnitStateModel unitStateModel = UnitStateModel.getInstance();
+        UnitState unitState = unitStateModel.getInitialState();
+        if(invoicePosition.isInvReg() && invoicePosition.getUnits().size()==0) {
+            for(int i=0;i<invoicePosition.getQuantity();i++) {
+                Unit unit = new Unit();
+                unit.setInvoicePosition(invoicePosition);
+                unit.setName(invoicePosition.getName());
+                unit.setPrice(invoicePosition.getPrice());
+                unit.setType(invoicePosition.getUnitType());
+                unit.setPlace(initialPlace);
+                unit.setState(unitState);
+                unit.setQuantity(1L);
+                invoicePosition.getUnits().add(unit);
+            }
+        }
+    }
+
+    private void processInvNumbers()  {
+
+
+        String invString = JOptionPane.showInputDialog(currentDialog,
+                "Введите начальный инвентарный номер",
+                "Назначение инвентарных",
+                JOptionPane.QUESTION_MESSAGE);
+//        JOptionPane.showMessageDialog(currentDialog,"Введенное значение: " + invString);
+
+        Long invNumber = null;
+        try {
+            invNumber = Long.decode(invString);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(currentDialog,"Инвентарный номер должен быть числом","Ошибка",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+//        if (invNumber == null) {
+//            JOptionPane.showMessageDialog(currentDialog,"Инвентарный номер должен быть числом","Ошибка",JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
+
+
+        for (Unit unit: invoicePosition.getUnits()) {
+            unit.setInvNumber(String.valueOf(invNumber++));
+        }
+
+        unitsTableModel.updateUnits();
+    }
+
+    private void selectPlace() {
+        Place selectedPlace = ListDialogFactory.showselectPlaceListDialog(currentDialog);
+        if (selectedPlace!=null) {
+            for (Unit unit: invoicePosition.getUnits()) {
+                unit.setPlace(selectedPlace);
+            }
+            unitsTableModel.updateUnits();
+        }
     }
 
     void editUnit() {

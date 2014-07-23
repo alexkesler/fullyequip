@@ -1,6 +1,7 @@
 package org.kesler.fullyequip.gui.dialog;
 
 import org.kesler.fullyequip.logic.AuctionType;
+import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.UnitType;
 
 import javax.swing.*;
@@ -30,6 +31,11 @@ public class ListDialogFactory {
 
     public static UnitType showselectUnitTypeListDialog(JDialog parentDialog) {
         return ListDialogController.create(UnitType.class,"Типы оборудовния").showSelectDialog(parentDialog);
+    }
+
+
+    public static Place showselectPlaceListDialog(JDialog parentDialog) {
+        return ListDialogController.create(Place.class,"Размещения").showSelectDialog(parentDialog);
     }
 
 
