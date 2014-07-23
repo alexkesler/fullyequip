@@ -35,6 +35,7 @@ class MainView extends JFrame {
         JMenu taskMenu = new JMenu("Задачи");
 
         JMenuItem newUnitsMenuItem = new JMenuItem("Поступление");
+        newUnitsMenuItem.setIcon(ResourcesUtil.getIcon("server_add.png"));
         newUnitsMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -42,6 +43,7 @@ class MainView extends JFrame {
             }
         });
         JMenuItem newMoveMenuItem = new JMenuItem("Перемещение");
+        newMoveMenuItem.setIcon(ResourcesUtil.getIcon("server_go.png"));
         newMoveMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -54,20 +56,6 @@ class MainView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.showPlaceEquipDialog();
-            }
-        });
-        JMenuItem auctionsMenuItem = new JMenuItem("Аукционы");
-        auctionsMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.showAuctionsDialog();
-            }
-        });
-        JMenuItem contractsMenuItem = new JMenuItem("Договора");
-        contractsMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.showContractsDialog();
             }
         });
 
@@ -83,8 +71,6 @@ class MainView extends JFrame {
         taskMenu.add(newUnitsMenuItem);
         taskMenu.add(newMoveMenuItem);
         taskMenu.add(placesEquipMenuItem);
-        taskMenu.add(auctionsMenuItem);
-        taskMenu.add(contractsMenuItem);
         taskMenu.add(closeMenuItem);
 
 
@@ -106,6 +92,14 @@ class MainView extends JFrame {
             }
         });
 
+        JMenuItem auctionTypesMenuItem = new JMenuItem("Типы аукционов");
+        auctionTypesMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.showAuctionTypeDialog();
+            }
+        });
+
         JMenuItem placesMenuItem = new JMenuItem("Размещения");
         placesMenuItem.addActionListener(new ActionListener() {
             @Override
@@ -122,20 +116,30 @@ class MainView extends JFrame {
             }
         });
 
-        JMenuItem auctionTypesMenuItem = new JMenuItem("Типы аукционов");
-        auctionTypesMenuItem.addActionListener(new ActionListener() {
+        JMenuItem auctionsMenuItem = new JMenuItem("Аукционы");
+        auctionsMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.showAuctionTypeDialog();
+                controller.showAuctionsDialog();
+            }
+        });
+
+        JMenuItem contractsMenuItem = new JMenuItem("Договора");
+        contractsMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.showContractsDialog();
             }
         });
 
 
         dictMenu.add(unitTypesMenuItem);
         dictMenu.add(unitStatesMenuItem);
+        dictMenu.add(auctionTypesMenuItem);
         dictMenu.add(placesMenuItem);
         dictMenu.add(suppliersMenuItem);
-        dictMenu.add(auctionTypesMenuItem);
+        dictMenu.add(auctionsMenuItem);
+        dictMenu.add(contractsMenuItem);
 
 
         JMenu reportMenu = new JMenu("Отчеты");
