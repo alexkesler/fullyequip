@@ -51,13 +51,6 @@ class MainView extends JFrame {
             }
         });
 
-        JMenuItem placesEquipMenuItem = new JMenuItem("Наличие");
-        placesEquipMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.showPlaceEquipDialog();
-            }
-        });
 
         JMenuItem closeMenuItem = new JMenuItem("Закрыть");
         closeMenuItem.setIcon(ResourcesUtil.getIcon("door_out.png"));
@@ -70,7 +63,6 @@ class MainView extends JFrame {
 
         taskMenu.add(newUnitsMenuItem);
         taskMenu.add(newMoveMenuItem);
-        taskMenu.add(placesEquipMenuItem);
         taskMenu.add(closeMenuItem);
 
 

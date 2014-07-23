@@ -3,7 +3,6 @@ package org.kesler.fullyequip.gui.dialog.invoice;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
 import org.kesler.fullyequip.gui.dialog.ListDialogFactory;
-import org.kesler.fullyequip.gui.dict.DictListSellRenderer;
 import org.kesler.fullyequip.logic.Invoice;
 import org.kesler.fullyequip.logic.InvoicePosition;
 import org.kesler.fullyequip.logic.UnitType;
