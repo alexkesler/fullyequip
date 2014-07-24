@@ -96,6 +96,10 @@ public class Unit extends AbstractEntity implements DictEntity{
     }
 
     public void moveTo(Place place) {
+        moveTo(place, new Date());
+    }
+
+    public void moveTo(Place place, Date date) {
         // если присваивается то же место, то ничего не делаем
         if (this.place!=null && this.place.equals(place)) return;
         if (this.place!=null) this.place.getUnits().remove(this); // удаляемся из старого расположения
@@ -106,10 +110,11 @@ public class Unit extends AbstractEntity implements DictEntity{
         UnitMove move = new UnitMove();
         move.setUnit(this);
         move.setPlace(place);
-        move.setMoveDate(new Date());
+        move.setMoveDate(date);
         moves.add(move);
 
     }
+
 
     public UnitState getState() {return state;}
     public void setState(UnitState state) {this.state = state;}
