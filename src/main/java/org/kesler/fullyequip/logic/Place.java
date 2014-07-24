@@ -5,7 +5,7 @@ import org.kesler.fullyequip.dao.AbstractEntity;
 import org.kesler.fullyequip.gui.dict.DictEntity;
 
 import javax.persistence.*;
-import javax.persistence.criteria.Predicate;
+import static javax.persistence.CascadeType.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,7 +34,7 @@ public class Place extends AbstractEntity implements DictEntity{
     @Column(name = "Storage")
     private Boolean storage;
 
-    @OneToMany(mappedBy = "place", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "place", fetch = FetchType.EAGER, cascade = ALL)
 //    @Fetch(FetchMode.SUBSELECT)
     private Set<Unit> units;
 

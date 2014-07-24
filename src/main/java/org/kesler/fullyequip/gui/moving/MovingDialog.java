@@ -1,5 +1,6 @@
 package org.kesler.fullyequip.gui.moving;
 
+import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
 import org.kesler.fullyequip.gui.receive.CheckableUnit;
@@ -13,7 +14,11 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,6 +29,7 @@ public class MovingDialog extends AbstractDialog{
     private MovingDialogController controller;
 
     private JLabel newPlaceLabel;
+    private WebDateField moveDateField;
     private UnitsTableModel unitsTableModel;
     private JTable unitsTable;
 
@@ -51,12 +57,23 @@ public class MovingDialog extends AbstractDialog{
             }
         });
 
+        moveDateField = new WebDateField(new Date());
+
         unitsTableModel = new UnitsTableModel();
         unitsTable = new JTable(unitsTableModel);
         // Устанавливаем ширину колонок
         for (int i=0; i< unitsTableModel.getColumnCount(); i++) {
             unitsTable.getColumnModel().getColumn(i).setPreferredWidth(unitsTableModel.getColumnWidth(i));
         }
+        unitsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        unitsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount()==2) {
+                    editUnit();
+                }
+            }
+        });
         JScrollPane unitsTableScrollPane = new JScrollPane(unitsTable);
 
         JButton addUnitsButton = new JButton(ResourcesUtil.getIcon("add.png"));
@@ -66,17 +83,27 @@ public class MovingDialog extends AbstractDialog{
                 addUnits();
             }
         });
-        JButton removeUnitsButton = new JButton(ResourcesUtil.getIcon("delete.png"));
+
+        JButton removeUnitButton = new JButton(ResourcesUtil.getIcon("delete.png"));
+        removeUnitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeUnit();
+            }
+        });
+
         JButton printMoveReportButton = new JButton("Печать ведомости");
 
 
         dataPanel.add(new JLabel("Куда перемещаем: "), "span, split 3");
         dataPanel.add(newPlaceLabel, "pushx, growx");
         dataPanel.add(selectNewPlaceButton, "wrap");
+        dataPanel.add(new JLabel("Дата перемещения: "), "span, split 2");
+        dataPanel.add(moveDateField);
         dataPanel.add(new JLabel("Оборудование: "), "wrap");
         dataPanel.add(unitsTableScrollPane, "span, pushy, grow");
         dataPanel.add(addUnitsButton, " split 2");
-        dataPanel.add(removeUnitsButton);
+        dataPanel.add(removeUnitButton);
         dataPanel.add(printMoveReportButton, "right");
 
 
@@ -84,7 +111,19 @@ public class MovingDialog extends AbstractDialog{
         JPanel buttonPanel = new JPanel();
 
         JButton moveButton = new JButton("Переместить");
-        JButton cancelButton = new JButton("Отмена");
+        moveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.move();
+            }
+        });
+        JButton cancelButton = new JButton("Закрыть");
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.closeDialog();
+            }
+        });
 
         buttonPanel.add(moveButton);
         buttonPanel.add(cancelButton);
@@ -98,42 +137,63 @@ public class MovingDialog extends AbstractDialog{
 
     private void selectNewPlace() {
         controller.selectNewPlace();
-        Place place = controller.getMoving().getNewPlace();
-        newPlaceLabel.setText(place == null ? "Не опр" : place.toString());
+    }
 
+    void update() {
+        Place place = controller.getNewPlace();
+        newPlaceLabel.setText(place == null ? "Не опр" : place.toString());
+        unitsTableModel.setUnits(controller.getUnits());
     }
 
     private void addUnits() {
-        List<Unit> units = controller.getAddingUnits();
-        unitsTableModel.addUnits(units);
+        controller.addUnits();
+    }
+
+    private void editUnit() {
+        int index = unitsTable.getSelectedRow();
+        if (index < 0) {
+            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано", "Внимание", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        controller.editUnit(unitsTableModel.getUnitAt(index));
+    }
+
+    private void removeUnit() {
+        int index = unitsTable.getSelectedRow();
+        if (index < 0) {
+            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано", "Внимание", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        controller.removeUnit(unitsTableModel.getUnitAt(index));
+    }
+
+
+
+    Date getMovingDate() {
+        return moveDateField.getDate();
     }
 
     class UnitsTableModel extends AbstractTableModel {
 
-        private List<CheckableUnit> checkableUnits;
+        private List<Unit> units;
 
         UnitsTableModel() {
-            checkableUnits = new ArrayList<CheckableUnit>();
+            units = new ArrayList<Unit>();
         }
 
-        public void addUnits(List<Unit> units) {
-            ArrayList<CheckableUnit> newCheckableUnits = new ArrayList<CheckableUnit>();
-            for(Unit unit:units) {
-                CheckableUnit newCheckableUnit = null;
-                for(CheckableUnit checkableUnit : checkableUnits) {
-                    if (unit.equals(checkableUnit.getUnit())) newCheckableUnit = checkableUnit;
-                    break;
-                }
-                if (newCheckableUnit ==null) newCheckableUnit = new CheckableUnit(unit,false);
-                newCheckableUnits.add(newCheckableUnit);
-            }
-            checkableUnits = newCheckableUnits;
+        public void setUnits(Collection<Unit> units) {
+            this.units = new ArrayList<Unit>(units);
             fireTableDataChanged();
+        }
+
+        Unit getUnitAt(int index) {
+            return units.get(index);
         }
 
         @Override
         public int getRowCount() {
-            return checkableUnits.size();
+            return units.size();
         }
 
         @Override
@@ -145,8 +205,7 @@ public class MovingDialog extends AbstractDialog{
         public Object getValueAt(int rowIndex, int columnIndex) {
             Object value = null;
 
-            CheckableUnit checkableUnit = checkableUnits.get(rowIndex);
-            Unit unit = checkableUnit.getUnit();
+            Unit unit = units.get(rowIndex);
 
             switch (columnIndex) {
                 case 0:
