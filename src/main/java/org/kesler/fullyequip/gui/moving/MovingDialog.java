@@ -276,7 +276,7 @@ public class MovingDialog extends AbstractDialog{
                     width = 100;
                     break;
                 case 4:
-                    width = 20;
+                    width = 30;
                     break;
                 case 5:
                     width = 150;

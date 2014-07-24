@@ -1,7 +1,8 @@
-package org.kesler.fullyequip.gui.receive;
+package org.kesler.fullyequip.gui.equip;
 
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
+import org.kesler.fullyequip.gui.receive.CheckableUnit;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
 import org.kesler.fullyequip.util.ResourcesUtil;

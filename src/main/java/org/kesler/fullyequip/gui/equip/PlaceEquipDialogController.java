@@ -1,4 +1,4 @@
-package org.kesler.fullyequip.gui.receive;
+package org.kesler.fullyequip.gui.equip;
 
 import org.kesler.fullyequip.gui.dialog.ListDialogController;
 import org.kesler.fullyequip.logic.Place;
