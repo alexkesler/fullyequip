@@ -2,7 +2,7 @@ package org.kesler.fullyequip.gui.main;
 
 import org.kesler.fullyequip.gui.dialog.ListDialogController;
 import org.kesler.fullyequip.gui.receive.ContractEquipDialogController;
-import org.kesler.fullyequip.gui.receive.PlaceEquipDialogController;
+import org.kesler.fullyequip.gui.equip.PlaceEquipDialogController;
 import org.kesler.fullyequip.gui.moving.MovingDialogController;
 import org.kesler.fullyequip.gui.report.ReportDialogController;
 import org.kesler.fullyequip.logic.*;
