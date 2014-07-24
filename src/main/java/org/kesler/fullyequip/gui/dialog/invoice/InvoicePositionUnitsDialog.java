@@ -3,7 +3,7 @@ package org.kesler.fullyequip.gui.dialog.invoice;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
 import org.kesler.fullyequip.gui.dialog.ListDialogFactory;
-import org.kesler.fullyequip.gui.dialog.unit.UnitDialog;
+import org.kesler.fullyequip.gui.dialog.unit.UnitDialogController;
 import org.kesler.fullyequip.logic.InvoicePosition;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
@@ -176,8 +176,7 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
             JOptionPane.showMessageDialog(currentDialog,"Ничего не выбрано", "Внимание", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        UnitDialog unitDialog = new UnitDialog(currentDialog, selectedUnit);
-        unitDialog.setVisible(true);
+        UnitDialogController.getInstance().showDialog(currentDialog, selectedUnit);
         unitsTableModel.updateUnits();
     }
 

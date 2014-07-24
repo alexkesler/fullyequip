@@ -1,6 +1,7 @@
 package org.kesler.fullyequip.gui.dialog.unit;
 
 import org.kesler.fullyequip.logic.Unit;
+import org.kesler.fullyequip.logic.model.UnitModel;
 
 import javax.swing.*;
 
@@ -18,6 +19,9 @@ public class UnitDialogController {
     public void showDialog(JDialog parentDialog, Unit unit) {
         unitDialog = new UnitDialog(parentDialog,unit);
         unitDialog.setVisible(true);
+        if (unitDialog.getResult()==UnitDialog.OK) {
+            UnitModel.getInstance().saveOrUpdateItem(unit);
+        }
     }
 
 

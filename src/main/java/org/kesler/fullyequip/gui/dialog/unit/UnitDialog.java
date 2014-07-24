@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Диалог редактирования единицы оборудования
  */
-public class UnitDialog extends AbstractItemDialog<Unit> {
+class UnitDialog extends AbstractItemDialog<Unit> {
 
     private InvoicePosition invoicePosition;
     private Place place;
@@ -56,7 +56,7 @@ public class UnitDialog extends AbstractItemDialog<Unit> {
     }
 
     // Редактируем оборудование
-    public UnitDialog(JDialog parentDialog, Unit unit) {
+    UnitDialog(JDialog parentDialog, Unit unit) {
         super(parentDialog, "Оборудование", unit);
         this.invoicePosition = unit.getInvoicePosition();
         this.place = unit.getPlace();

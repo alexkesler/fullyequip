@@ -1,7 +1,7 @@
 package org.kesler.fullyequip.gui.moving;
 
 import org.kesler.fullyequip.gui.dialog.ListDialogController;
-import org.kesler.fullyequip.gui.dialog.unit.UnitDialog;
+import org.kesler.fullyequip.gui.dialog.unit.UnitDialogController;
 import org.kesler.fullyequip.gui.equip.PlaceEquipDialogController;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
@@ -66,8 +66,7 @@ public class MovingDialogController {
     }
 
     void editUnit (Unit unit) {
-        UnitDialog unitDialog = new UnitDialog(movingDialog, unit);
-        unitDialog.setVisible(true);
+        UnitDialogController.getInstance().showDialog(movingDialog,unit);
     }
 
 
