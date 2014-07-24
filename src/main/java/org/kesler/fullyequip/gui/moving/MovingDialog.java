@@ -14,6 +14,8 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -64,6 +66,14 @@ public class MovingDialog extends AbstractDialog{
             unitsTable.getColumnModel().getColumn(i).setPreferredWidth(unitsTableModel.getColumnWidth(i));
         }
         unitsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        unitsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount()==2) {
+                    editUnit();
+                }
+            }
+        });
         JScrollPane unitsTableScrollPane = new JScrollPane(unitsTable);
 
         JButton addUnitsButton = new JButton(ResourcesUtil.getIcon("add.png"));
@@ -139,6 +149,16 @@ public class MovingDialog extends AbstractDialog{
         controller.addUnits();
     }
 
+    private void editUnit() {
+        int index = unitsTable.getSelectedRow();
+        if (index < 0) {
+            JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано", "Внимание", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        controller.editUnit(unitsTableModel.getUnitAt(index));
+    }
+
     private void removeUnit() {
         int index = unitsTable.getSelectedRow();
         if (index < 0) {
@@ -147,6 +167,8 @@ public class MovingDialog extends AbstractDialog{
         }
         controller.removeUnit(unitsTableModel.getUnitAt(index));
     }
+
+
 
     Date getMovingDate() {
         return moveDateField.getDate();

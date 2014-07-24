@@ -1,6 +1,7 @@
 package org.kesler.fullyequip.gui.moving;
 
 import org.kesler.fullyequip.gui.dialog.ListDialogController;
+import org.kesler.fullyequip.gui.dialog.unit.UnitDialog;
 import org.kesler.fullyequip.gui.receive.PlaceEquipDialogController;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
@@ -63,6 +64,12 @@ public class MovingDialogController {
         units.addAll(newUnits);
         movingDialog.update();
     }
+
+    void editUnit (Unit unit) {
+        UnitDialog unitDialog = new UnitDialog(movingDialog, unit);
+        unitDialog.setVisible(true);
+    }
+
 
     void removeUnit(Unit unit) {
         units.remove(unit);
