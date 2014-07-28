@@ -8,8 +8,8 @@ import org.kesler.fullyequip.logic.InvoicePosition;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
 import org.kesler.fullyequip.logic.UnitState;
-import org.kesler.fullyequip.logic.model.PlaceModel;
-import org.kesler.fullyequip.logic.model.UnitStateModel;
+import org.kesler.fullyequip.logic.model.PlacesModel;
+import org.kesler.fullyequip.logic.model.UnitStatesModel;
 import org.kesler.fullyequip.util.ResourcesUtil;
 
 
@@ -112,10 +112,10 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
     }
 
     private void createUnits() {
-        PlaceModel placeModel = PlaceModel.getInstance();
-        Place initialPlace = placeModel.getInitialPlace();
-        UnitStateModel unitStateModel = UnitStateModel.getInstance();
-        UnitState unitState = unitStateModel.getInitialState();
+        PlacesModel placesModel = PlacesModel.getInstance();
+        Place initialPlace = placesModel.getInitialPlace();
+        UnitStatesModel unitStatesModel = UnitStatesModel.getInstance();
+        UnitState unitState = unitStatesModel.getInitialState();
         if(invoicePosition.isInvReg() && invoicePosition.getUnits().size()==0) {
             for(int i=0;i<invoicePosition.getQuantity();i++) {
                 Unit unit = new Unit();

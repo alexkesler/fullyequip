@@ -8,16 +8,16 @@ import java.util.List;
 /**
  * Модель для Размещения, добавляет формирование начального места
  */
-public class PlaceModel extends DefaultModel<Place> {
-    private static PlaceModel instance = new PlaceModel();
+public class PlacesModel extends DefaultModel<Place> {
+    private static PlacesModel instance = new PlacesModel();
     private Place initialPlace;
 
-    private PlaceModel() {
+    private PlacesModel() {
         super(Place.class);
         log = Logger.getLogger("PlaceModel");
     }
 
-    public static synchronized PlaceModel getInstance() {return instance;}
+    public static synchronized PlacesModel getInstance() {return instance;}
 
     public Place getInitialPlace() {
 

@@ -4,6 +4,7 @@ import org.kesler.fullyequip.gui.dialog.ListDialogController;
 import org.kesler.fullyequip.gui.receive.ContractEquipDialogController;
 import org.kesler.fullyequip.gui.equip.PlaceEquipDialogController;
 import org.kesler.fullyequip.gui.moving.MovingDialogController;
+import org.kesler.fullyequip.gui.reestr.ReestrViewController;
 import org.kesler.fullyequip.gui.report.ReportDialogController;
 import org.kesler.fullyequip.logic.*;
 
@@ -87,6 +88,10 @@ public class MainViewController {
 
     void showPlaceEquipDialog() {
         PlaceEquipDialogController.getInstance().showDialog(view);
+    }
+
+    void showReestrView() {
+        ReestrViewController.getInstance().openView(view);
     }
 
 }

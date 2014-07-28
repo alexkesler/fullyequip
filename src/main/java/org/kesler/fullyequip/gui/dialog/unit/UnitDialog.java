@@ -3,9 +3,9 @@ package org.kesler.fullyequip.gui.dialog.unit;
 import com.alee.extended.panel.CollapsiblePaneAdapter;
 import com.alee.extended.panel.WebCollapsiblePane;
 import net.miginfocom.swing.MigLayout;
+import org.kesler.fullyequip.gui.dialog.AbstractDialog;
 import org.kesler.fullyequip.gui.dialog.ListDialogController;
 import org.kesler.fullyequip.gui.dialog.ListDialogFactory;
-import org.kesler.fullyequip.gui.dialog.item.AbstractItemDialog;
 import org.kesler.fullyequip.logic.*;
 import org.kesler.fullyequip.logic.model.*;
 import org.kesler.fullyequip.util.ResourcesUtil;
@@ -13,8 +13,7 @@ import org.kesler.fullyequip.util.ResourcesUtil;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.text.NumberFormatter;
-import java.awt.Font;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
@@ -25,8 +24,9 @@ import java.util.List;
 /**
  * Диалог редактирования единицы оборудования
  */
-class UnitDialog extends AbstractItemDialog<Unit> {
+class UnitDialog extends AbstractDialog {
 
+    private Unit unit;
     private InvoicePosition invoicePosition;
     private Place place;
 
@@ -50,22 +50,39 @@ class UnitDialog extends AbstractItemDialog<Unit> {
 
     // Создаем новое оборудование по указанной накладной и помещаем его в указанное место
     public UnitDialog(JDialog parentDialog, InvoicePosition invoicePosition) {
-        super(parentDialog, "Создать оборудование");
+        super(parentDialog, "Создать оборудование",true);
         this.invoicePosition = invoicePosition;
-        loadGUIFromItem();
+        createNewUnit();
+        createGUI();
+        loadGUIFromUnit();
     }
 
     // Редактируем оборудование
     UnitDialog(JDialog parentDialog, Unit unit) {
-        super(parentDialog, "Оборудование", unit);
+        super(parentDialog, "Оборудование", true);
+        this.unit = unit;
         this.invoicePosition = unit.getInvoicePosition();
         this.place = unit.getPlace();
-        loadGUIFromItem();
+        createGUI();
+        loadGUIFromUnit();
 
     }
 
-    @Override
-    protected JPanel createItemPanel() {
+    // Редактируем оборудование
+    UnitDialog(JFrame parentFrame, Unit unit) {
+        super(parentFrame, "Оборудование", true);
+        this.unit = unit;
+        this.invoicePosition = unit.getInvoicePosition();
+        this.place = unit.getPlace();
+        createGUI();
+        loadGUIFromUnit();
+
+    }
+
+
+    private void createGUI() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
         JPanel dataPanel = new JPanel(new MigLayout("fillx"));
 
         contractLabel = new JLabel("Не определен");
@@ -181,43 +198,73 @@ class UnitDialog extends AbstractItemDialog<Unit> {
         dataPanel.add(statePanel, "span, growx");
         dataPanel.add(unitMoveWebCollapsiblePane,"span");
 
-        return dataPanel;
+
+        JPanel buttonPanel = new JPanel();
+
+        JButton okButton = new JButton("Ок");
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (readUnitFromGUI()) {
+                    result = OK;
+                    setVisible(false);
+                }
+            }
+        });
+
+        JButton cancelButton = new JButton("Отмена");
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                result = CANCEL;
+                setVisible(false);
+            }
+        });
+
+
+        buttonPanel.add(okButton);
+
+
+        mainPanel.add(dataPanel,BorderLayout.CENTER);
+        mainPanel.add(buttonPanel,BorderLayout.SOUTH);
+
+        setContentPane(mainPanel);
+        pack();
     }
 
-    @Override
-    protected void createNewItem() {
-        item = new Unit();
-        item.setInvoicePosition(invoicePosition);
-        item.setPlace(PlaceModel.getInstance().getInitialPlace());
-        item.setState(UnitStateModel.getInstance().getInitialState());
+
+    protected void createNewUnit() {
+        unit = new Unit();
+        unit.setInvoicePosition(invoicePosition);
+        unit.setPlace(PlacesModel.getInstance().getInitialPlace());
+        unit.setState(UnitStatesModel.getInstance().getInitialState());
     }
 
-    @Override
-    protected void loadGUIFromItem() {
 
-        Invoice invoice = item.getInvoicePosition().getInvoice();
-        place = item.getPlace();
+    public void loadGUIFromUnit() {
+
+        Invoice invoice = unit.getInvoicePosition().getInvoice();
+        place = unit.getPlace();
         String contractName = invoice==null?"Не определен":invoice.getContract().toString();
 
         contractLabel.setText("<html>"
                 + contractName
                 + "</html>");
         invoiceLabel.setText(invoice==null?"Не определена":invoice.toString());
-        placeLabel.setText(place==null?"Не определено":place.toString());
+        placeLabel.setText(place==null?"Не определено": place.toString());
 
-        unitTypeComboBox.setSelectedItem(item.getType());
-        unitNameTextField.setText(item.getName());
-        serialNumTextField.setText(item.getSerialNumber());
-        invNumTextField.setText(item.getInvNumber());
-        priceTextField.setValue(item.getPrice());
-        quantityTextField.setValue(item.getQuantity());
+        unitTypeComboBox.setSelectedItem(unit.getType());
+        unitNameTextField.setText(unit.getName());
+        serialNumTextField.setText(unit.getSerialNumber());
+        invNumTextField.setText(unit.getInvNumber());
+        priceTextField.setValue(unit.getPrice());
+        quantityTextField.setValue(unit.getQuantity());
 
-        unitStateComboBox.setSelectedItem(item.getState());
+        unitStateComboBox.setSelectedItem(unit.getState());
 
     }
 
-    @Override
-    protected boolean readItemFromGUI () {
+    protected boolean readUnitFromGUI () {
 
         String unitName = unitNameTextField.getText();
         if(unitName.isEmpty()) {
@@ -242,31 +289,31 @@ class UnitDialog extends AbstractItemDialog<Unit> {
 
         Long quantity = ((Number)quantityTextField.getValue()).longValue();
 
-        item.setType((UnitType)unitTypeComboBox.getSelectedItem());
-        item.setName(unitName);
-        item.setSerialNumber(serialNum);
-        item.setInvNumber(invNum);
-        item.setPrice(price);
-        item.setQuantity(quantity);
+        unit.setType((UnitType) unitTypeComboBox.getSelectedItem());
+        unit.setName(unitName);
+        unit.setSerialNumber(serialNum);
+        unit.setInvNumber(invNum);
+        unit.setPrice(price);
+        unit.setQuantity(quantity);
 
-        item.setState((UnitState)unitStateComboBox.getSelectedItem());
+        unit.setState((UnitState) unitStateComboBox.getSelectedItem());
 
-        item.setInvoicePosition(invoicePosition);
-        item.setPlace(place);
+        unit.setInvoicePosition(invoicePosition);
+        unit.setPlace(place);
 
         return true;
     }
 
-    @Override
+
     protected boolean checkChanged() {
-        if(!unitTypeComboBox.getSelectedItem().equals(item.getType())) return true;
-        if(!unitNameTextField.getText().equals(item.getName())) return true;
-        if (!serialNumTextField.getText().equals(item.getSerialNumber())) return true;
-        if(!invNumTextField.getText().equals(item.getInvNumber())) return true;
+        if(!unitTypeComboBox.getSelectedItem().equals(unit.getType())) return true;
+        if(!unitNameTextField.getText().equals(unit.getName())) return true;
+        if (!serialNumTextField.getText().equals(unit.getSerialNumber())) return true;
+        if(!invNumTextField.getText().equals(unit.getInvNumber())) return true;
         Float price = ((Number)priceTextField.getValue()).floatValue();
-        if(!price.equals(item.getPrice())) return true;
+        if(!price.equals(unit.getPrice())) return true;
         Integer quantity = ((Number)quantityTextField.getValue()).intValue();
-        if (!quantity.equals(item.getQuantity())) return true;
+        if (!quantity.equals(unit.getQuantity())) return true;
 
 
         return false;
@@ -309,10 +356,10 @@ class UnitDialog extends AbstractItemDialog<Unit> {
     // Модель для состояний оборудования
     class UnitStateComboBoxModel extends DefaultComboBoxModel<UnitState> implements ModelStateListener {
 
-        private UnitStateModel model;
+        private UnitStatesModel model;
 
         UnitStateComboBoxModel() {
-            model = UnitStateModel.getInstance();
+            model = UnitStatesModel.getInstance();
             model.addModelStateListener(this);
             model.readItemsInSeparateThread();
         }
@@ -347,7 +394,7 @@ class UnitDialog extends AbstractItemDialog<Unit> {
         private List<UnitMove> moves;
 
         UnitMoveTableModel() {
-            moves = new ArrayList<UnitMove>(item.getMoves());
+            moves = new ArrayList<UnitMove>(unit.getMoves());
             simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
         }
 
