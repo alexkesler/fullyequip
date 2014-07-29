@@ -1,25 +1,22 @@
 package org.kesler.fullyequip.gui.reestr.filter;
 
-import java.util.List;
-import java.util.ArrayList;
-import javax.swing.*;
-
-import java.awt.GridLayout;
-
+import com.alee.extended.list.CheckBoxListModel;
 import com.alee.extended.list.WebCheckBoxList;
 import net.miginfocom.swing.MigLayout;
-
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.model.PlacesModel;
 import org.kesler.fullyequip.logic.unitsfilter.PlaceUnitsFilter;
 
+import javax.swing.*;
+import java.util.HashSet;
+import java.util.Set;
+
 public class PlaceUnitsFilterDialog extends UnitsFilterDialog {
 
-	private List<Place> filterPlaces;
+	private Set<Place> filterPlaces;
 
-	private List<Place> allPlaces;
-    private WebCheckBoxList placesCheckBoxList;
-	private List<JCheckBox> checkBoxes;
+	private Set<Place> allPlaces;
+    private PlacesCheckBoxListModel placesCheckBoxListModel;
 
 
     public PlaceUnitsFilterDialog(JFrame frame) {
@@ -32,7 +29,7 @@ public class PlaceUnitsFilterDialog extends UnitsFilterDialog {
 
 	@Override
 	protected void createUnitsFilter() {
-		filterPlaces = new ArrayList<Place>();
+		filterPlaces = new HashSet<Place>();
 		unitsFilter = new PlaceUnitsFilter(filterPlaces);
 	}
 
@@ -40,22 +37,13 @@ public class PlaceUnitsFilterDialog extends UnitsFilterDialog {
 	protected JPanel createDataPanel() {
 		JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
-		JPanel statusesPanel = new JPanel(new GridLayout(0,1));
-		checkBoxes = new ArrayList<JCheckBox>();
+	    placesCheckBoxListModel = new PlacesCheckBoxListModel();
+        WebCheckBoxList placesCheckBoxList = new WebCheckBoxList(placesCheckBoxListModel);
 
-		allPlaces = PlacesModel.getInstance().getAllItems();
-
-		for (Place place: allPlaces) {
-			JCheckBox checkBox = new JCheckBox(place.getName());
-			checkBoxes.add(checkBox);
-			statusesPanel.add(checkBox);
-		}
-
-		JScrollPane statusesPanelScrollPane = new JScrollPane(statusesPanel);
+        JScrollPane placesCheckBoxListScrollPane = new JScrollPane(placesCheckBoxList);
 
 
-
-        dataPanel.add(statusesPanelScrollPane, "span, grow");
+        dataPanel.add(placesCheckBoxListScrollPane, "span, grow");
 
         return dataPanel;
 	}
@@ -64,13 +52,10 @@ public class PlaceUnitsFilterDialog extends UnitsFilterDialog {
 	protected void loadGUIDataFromUnitsFilter() {
 		PlaceUnitsFilter placeUnitsFilter = (PlaceUnitsFilter) unitsFilter;
 		this.filterPlaces = placeUnitsFilter.getPlaces();
+        PlacesModel.getInstance().readItemsFromDB();
+        this.allPlaces = new HashSet<Place>(PlacesModel.getInstance().getAllItems());
 
-        for (int i = 0; i < allPlaces.size(); i++) {
-			Place place = allPlaces.get(i);
-			JCheckBox checkBox = checkBoxes.get(i);
-			if(filterPlaces.contains(place)) checkBox.setSelected(true);
-			else checkBox.setSelected(false);
-		}
+        placesCheckBoxListModel.updatePlaces();
 
     }
 
@@ -78,18 +63,11 @@ public class PlaceUnitsFilterDialog extends UnitsFilterDialog {
 	@Override
 	protected boolean readUnitsFilterFromGUIData() {
 
-		filterPlaces.clear();
-
-		for (int i = 0; i < checkBoxes.size(); i++) {
-			JCheckBox checkBox = checkBoxes.get(i);
-			Place place = allPlaces.get(i);
-			if (checkBox.isSelected()) {
-				filterPlaces.add(place);
-			}
-		}
+        filterPlaces.clear();
+        filterPlaces.addAll(placesCheckBoxListModel.getCheckedPlaces());
 
 		if (filterPlaces.size() == 0) {
-			JOptionPane.showMessageDialog(this, "Не выбрано ни одного статуса", "Ошибка", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Не выбрано ни одного размещения", "Ошибка", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 
@@ -97,5 +75,25 @@ public class PlaceUnitsFilterDialog extends UnitsFilterDialog {
         return true;
 
 	}
+
+
+    class PlacesCheckBoxListModel extends CheckBoxListModel {
+
+        void updatePlaces() {
+            removeAllElements();
+            for (Place place :allPlaces) {
+                addCheckBoxElement(place,filterPlaces.contains(place));
+            }
+        }
+
+        Set<Place> getCheckedPlaces() {
+            Set<Place> checkedPlaces = new HashSet<Place>();
+            for (int i=0; i<size();i++) {
+                if (isCheckBoxSelected(i)) checkedPlaces.add((Place)(get(i).getUserObject()));
+            }
+            return checkedPlaces;
+        }
+
+    }
 
 }

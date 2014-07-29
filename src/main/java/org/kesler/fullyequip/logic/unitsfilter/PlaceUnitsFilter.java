@@ -4,20 +4,21 @@ import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
 
 import java.util.List;
+import java.util.Set;
 
 
 public class PlaceUnitsFilter implements UnitsFilter {
 
     private UnitsFiltersEnum filtersEnum = UnitsFiltersEnum.PLACE;
 
-	private List<Place> filterPlaces;
+	private Set<Place> filterPlaces;
 
 
-	public PlaceUnitsFilter(List<Place> filterPlaces) {
+	public PlaceUnitsFilter(Set<Place> filterPlaces) {
 		this.filterPlaces = filterPlaces;
 	}
 
-	public List<Place> getPlaces() {
+	public Set<Place> getPlaces() {
 		return filterPlaces;
 	}
 
