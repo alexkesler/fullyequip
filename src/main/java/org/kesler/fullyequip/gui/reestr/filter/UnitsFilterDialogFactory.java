@@ -21,6 +21,9 @@ public abstract class UnitsFilterDialogFactory {
 			case PLACE:
 				unitsFilterDialog = new PlaceUnitsFilterDialog(view);
 			break;
+            case STATE:
+                unitsFilterDialog = new StateUnitsFilterDialog(view);
+                break;
             case AUCTION_TYPE:
                 unitsFilterDialog = new AuctionTypeUnitsFilterDialog(view);
                 break;

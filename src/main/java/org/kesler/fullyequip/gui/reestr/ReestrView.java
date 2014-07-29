@@ -107,17 +107,25 @@ public class ReestrView extends JFrame {
             }
         });
         // Пункт меню - добавление фильтра по типу аукциона
-        JMenuItem auctionTypeMenuItem = new JMenuItem("По типу аукциона");
-        auctionTypeMenuItem.addActionListener(new ActionListener() {
+        JMenuItem auctionTypeFilterMenuItem = new JMenuItem("По типу аукциона");
+        auctionTypeFilterMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 controller.addFilter(UnitsFiltersEnum.AUCTION_TYPE);
+            }
+        });
+        // Пункт меню - добавление фильтра по состоянию
+        JMenuItem stateFilterMenuItem = new JMenuItem("По состоянию");
+        stateFilterMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                controller.addFilter(UnitsFiltersEnum.STATE);
             }
         });
 
 
         // собираем всплывающее меню добавления фильтра
 		filtersPopupMenu.add(placeFilterMenuItem);
-        filtersPopupMenu.add(auctionTypeMenuItem);
+        filtersPopupMenu.add(auctionTypeFilterMenuItem);
+        filtersPopupMenu.add(stateFilterMenuItem);
 
 		// кнопка реадктирования
 		JButton editFilterButton = new JButton();
