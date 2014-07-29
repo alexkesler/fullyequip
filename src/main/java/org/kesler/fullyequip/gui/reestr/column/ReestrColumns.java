@@ -31,6 +31,7 @@ public class ReestrColumns {
         ReestrColumn quantityReestrColumn = new QuantityReestrColumn();
         ReestrColumn priceReestrColumn = new PriceReestrColumn();
         ReestrColumn auctionTypeReestrColumn = new AuctionTypeReestrColumn();
+        ReestrColumn stateReestrColumn = new StateReestrColumn();
 
 
         allColumns.add(nameReestrColumn);
@@ -39,6 +40,7 @@ public class ReestrColumns {
 		allColumns.add(placeReestrColumn);
         allColumns.add(quantityReestrColumn);
         allColumns.add(priceReestrColumn);
+        allColumns.add(stateReestrColumn);
 
 
 		allColumns = Collections.unmodifiableList(allColumns); /// делаем полный список колонок неизменным во избежание
@@ -57,6 +59,7 @@ public class ReestrColumns {
 		inactiveColumns = new ArrayList<ReestrColumn>();
         inactiveColumns.add(priceReestrColumn);
         inactiveColumns.add(auctionTypeReestrColumn);
+        inactiveColumns.add(stateReestrColumn);
 	}
 
 	public List<ReestrColumn> getAllColumns() {
