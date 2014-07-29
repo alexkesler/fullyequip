@@ -136,6 +136,15 @@ class MainView extends JFrame {
 
         JMenu reportMenu = new JMenu("Отчеты");
 
+        JMenuItem reestrMenuItem = new JMenuItem("Реестр");
+        reestrMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.showReestrView();
+            }
+        });
+
+        reportMenu.add(reestrMenuItem);
 
         JMenu optionsMenu = new JMenu("Настройки");
 

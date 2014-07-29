@@ -147,7 +147,7 @@ public class InvoicePositionDialog extends AbstractDialog {
     }
 
     void editUnitTypes() {
-        UnitType selectedUnitType = ListDialogFactory.showselectUnitTypeListDialog(currentDialog);
+        UnitType selectedUnitType = ListDialogFactory.showSelectUnitTypeListDialog(currentDialog);
         if (selectedUnitType!=null) {
             unitTypeComboBoxModel.update();
             unitTypeComboBox.setSelectedItem(selectedUnitType);

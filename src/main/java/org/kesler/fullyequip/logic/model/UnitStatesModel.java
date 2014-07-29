@@ -3,23 +3,22 @@ package org.kesler.fullyequip.logic.model;
 import org.apache.log4j.Logger;
 import org.kesler.fullyequip.logic.UnitState;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Модель управления состояниями оборудования
  */
-public class UnitStateModel extends DefaultModel<UnitState> {
-    private final static UnitStateModel instance = new UnitStateModel();
+public class UnitStatesModel extends DefaultModel<UnitState> {
+    private final static UnitStatesModel instance = new UnitStatesModel();
     private UnitState initialState;
 
 
-    private UnitStateModel() {
+    private UnitStatesModel() {
         super(UnitState.class);
         log = Logger.getLogger("UnitStateModel");
      }
 
-    public static synchronized UnitStateModel getInstance() {return instance;}
+    public static synchronized UnitStatesModel getInstance() {return instance;}
 
     public UnitState getInitialState() {
 

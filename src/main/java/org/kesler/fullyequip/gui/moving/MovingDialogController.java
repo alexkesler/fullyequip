@@ -5,7 +5,7 @@ import org.kesler.fullyequip.gui.dialog.unit.UnitDialogController;
 import org.kesler.fullyequip.gui.equip.PlaceEquipDialogController;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
-import org.kesler.fullyequip.logic.model.PlaceModel;
+import org.kesler.fullyequip.logic.model.PlacesModel;
 
 import javax.swing.*;
 import java.util.Date;
@@ -94,7 +94,7 @@ public class MovingDialogController {
                 unit.moveTo(newPlace, moveDate);
 
             }
-            PlaceModel.getInstance().saveOrUpdateItem(newPlace);
+            PlacesModel.getInstance().saveOrUpdateItem(newPlace);
             movingDialog.update();
             JOptionPane.showMessageDialog(movingDialog, "Готово", "Сообщение", JOptionPane.INFORMATION_MESSAGE);
         }

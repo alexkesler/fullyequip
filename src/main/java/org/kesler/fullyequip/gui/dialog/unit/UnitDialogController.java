@@ -1,7 +1,8 @@
 package org.kesler.fullyequip.gui.dialog.unit;
 
+import org.kesler.fullyequip.gui.dialog.AbstractDialog;
 import org.kesler.fullyequip.logic.Unit;
-import org.kesler.fullyequip.logic.model.UnitModel;
+import org.kesler.fullyequip.logic.model.UnitsModel;
 
 import javax.swing.*;
 
@@ -16,12 +17,24 @@ public class UnitDialogController {
 
     public static synchronized UnitDialogController getInstance() {return instance;}
 
-    public void showDialog(JDialog parentDialog, Unit unit) {
+    public boolean showDialog(JDialog parentDialog, Unit unit) {
         unitDialog = new UnitDialog(parentDialog,unit);
         unitDialog.setVisible(true);
-        if (unitDialog.getResult()==UnitDialog.OK) {
-            UnitModel.getInstance().saveOrUpdateItem(unit);
+        if (unitDialog.getResult()== AbstractDialog.OK) {
+            UnitsModel.getInstance().saveOrUpdateItem(unit);
+            return true;
         }
+        return false;
+    }
+
+    public boolean showDialog(JFrame parentFrame, Unit unit) {
+        unitDialog = new UnitDialog(parentFrame,unit);
+        unitDialog.setVisible(true);
+        if (unitDialog.getResult()== AbstractDialog.OK) {
+            UnitsModel.getInstance().saveOrUpdateItem(unit);
+            return true;
+        }
+        return false;
     }
 
 

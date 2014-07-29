@@ -55,7 +55,7 @@ public class UnitStateDialog  extends AbstractItemDialog<UnitState>{
 
         // текстовые поля
 
-        nameTextField.setName(name==null?"":name);
+        nameTextField.setText(name==null?"":name);
         initialCheckBox.setSelected(initial==null?false:initial);
 
 
