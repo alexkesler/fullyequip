@@ -100,7 +100,7 @@ public class ReestrView extends JFrame {
 			}
 		});
 		// Пункт меню - добавление фильтра по дате открытия
-		JMenuItem placeFilterMenuItem = new JMenuItem("По дате открытия");
+		JMenuItem placeFilterMenuItem = new JMenuItem("По размещению");
 		placeFilterMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 controller.addFilter(UnitsFiltersEnum.PLACE);

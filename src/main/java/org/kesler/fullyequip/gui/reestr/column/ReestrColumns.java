@@ -24,10 +24,18 @@ public class ReestrColumns {
 
 	private ReestrColumns() {
 		allColumns = new ArrayList<ReestrColumn>();
-		ReestrColumn placeReestrColumn = new PlaceReestrColumn();
+        ReestrColumn nameReestrColumn = new NameReestrColumn();
+        ReestrColumn typeReestrColumn = new TypeReestrColumn();
+        ReestrColumn invNumReestrColumn = new InvNumReestrColumn();
+        ReestrColumn placeReestrColumn = new PlaceReestrColumn();
+        ReestrColumn quantityReestrColumn = new QuantityReestrColumn();
 
 
+        allColumns.add(nameReestrColumn);
+        allColumns.add(typeReestrColumn);
+        allColumns.add(invNumReestrColumn);
 		allColumns.add(placeReestrColumn);
+        allColumns.add(quantityReestrColumn);
 
 
 		allColumns = Collections.unmodifiableList(allColumns); /// делаем полный список колонок неизменным во избежание
@@ -35,7 +43,11 @@ public class ReestrColumns {
 		// добавляем в активные поля 
 		activeColumns = new ArrayList<ReestrColumn>();
 
+        activeColumns.add(nameReestrColumn);
+        activeColumns.add(typeReestrColumn);
+        activeColumns.add(invNumReestrColumn);
 		activeColumns.add(placeReestrColumn);
+        activeColumns.add(quantityReestrColumn);
 
 
 		// список неактивных полей

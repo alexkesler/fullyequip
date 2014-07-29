@@ -12,11 +12,11 @@ public class PlaceReestrColumn extends ReestrColumn {
 
 	public String getValue(Unit unit) {
 		
-		String receptionCode = unit.getPlaceName();
+		String placeName = unit.getPlaceName();
 
-		if (receptionCode == null) receptionCode = "Не опр.";
+		if (placeName == null) placeName = "Не опр.";
 
-		return receptionCode;
+		return placeName;
 
 	}
 }
