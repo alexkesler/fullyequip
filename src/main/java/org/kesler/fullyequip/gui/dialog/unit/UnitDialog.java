@@ -37,6 +37,7 @@ class UnitDialog extends AbstractDialog {
 
     private UnitTypeComboBoxModel unitTypeComboBoxModel;
     private JComboBox<UnitType> unitTypeComboBox;
+    private UnitStateComboBoxModel unitStateComboBoxModel;
     private JComboBox<UnitState> unitStateComboBox;
     private JTextField unitNameTextField;
     private JTextField serialNumTextField;
@@ -55,6 +56,7 @@ class UnitDialog extends AbstractDialog {
         createNewUnit();
         createGUI();
         loadGUIFromUnit();
+        setLocationRelativeTo(parentDialog);
     }
 
     // Редактируем оборудование
@@ -65,7 +67,7 @@ class UnitDialog extends AbstractDialog {
         this.place = unit.getPlace();
         createGUI();
         loadGUIFromUnit();
-
+        setLocationRelativeTo(parentDialog);
     }
 
     // Редактируем оборудование
@@ -76,7 +78,7 @@ class UnitDialog extends AbstractDialog {
         this.place = unit.getPlace();
         createGUI();
         loadGUIFromUnit();
-
+        setLocationRelativeTo(parentFrame);
     }
 
 
@@ -136,10 +138,19 @@ class UnitDialog extends AbstractDialog {
         JPanel statePanel = new JPanel(new MigLayout("fill"));
         statePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Состояние"));
 
-        unitStateComboBox = new JComboBox<UnitState>(new UnitStateComboBoxModel());
+        unitStateComboBoxModel = new UnitStateComboBoxModel();
+        unitStateComboBox = new JComboBox<UnitState>(unitStateComboBoxModel);
+
+        JButton editUnitStatesButton = new JButton(ResourcesUtil.getIcon("table_edit.png"));
+        editUnitStatesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editUnitStates();
+            }
+        });
 
         statePanel.add(unitStateComboBox);
-
+        statePanel.add(editUnitStatesButton);
 
         JPanel unitMovePanel = new JPanel(new MigLayout("fill"));
         unitMovePanel.setBorder(BorderFactory.createEtchedBorder());
@@ -320,10 +331,18 @@ class UnitDialog extends AbstractDialog {
     }
 
     void editUnitTypes() {
-        UnitType selectedUnitType = ListDialogFactory.showselectUnitTypeListDialog(currentDialog);
+        UnitType selectedUnitType = ListDialogFactory.showSelectUnitTypeListDialog(currentDialog);
         if (selectedUnitType!=null) {
             unitTypeComboBoxModel.update();
             unitTypeComboBox.setSelectedItem(selectedUnitType);
+        }
+    }
+
+    void editUnitStates() {
+        UnitState selectedUnitState = ListDialogFactory.showSelectUnitStateListDialog(currentDialog);
+        if (selectedUnitState!=null) {
+            unitStateComboBoxModel.update();
+            unitStateComboBox.setSelectedItem(selectedUnitState);
         }
     }
 
@@ -365,7 +384,7 @@ class UnitDialog extends AbstractDialog {
         }
 
         void update() {
-
+            model.readItemsFromDB();
         }
 
         @Override

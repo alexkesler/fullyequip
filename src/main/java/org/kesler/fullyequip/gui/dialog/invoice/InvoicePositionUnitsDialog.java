@@ -162,7 +162,7 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
     }
 
     private void selectPlace() {
-        Place selectedPlace = ListDialogFactory.showselectPlaceListDialog(currentDialog);
+        Place selectedPlace = ListDialogFactory.showSelectPlaceListDialog(currentDialog);
         if (selectedPlace!=null) {
             for (Unit unit: invoicePosition.getUnits()) {
                 unit.setPlace(selectedPlace);
