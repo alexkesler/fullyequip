@@ -129,6 +129,11 @@ public class Unit extends AbstractEntity implements DictEntity{
         return place==null?"Не опр":place.getName();
     }
 
+    public AuctionType getAuctionType() {
+        if (invoicePosition.getInvoice().getContract().getAuction() == null) return null;
+        else return invoicePosition.getInvoice().getContract().getAuction().getType();
+    }
+
     @Override
     public String toString() {
         return name;

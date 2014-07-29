@@ -29,6 +29,8 @@ public class ReestrColumns {
         ReestrColumn invNumReestrColumn = new InvNumReestrColumn();
         ReestrColumn placeReestrColumn = new PlaceReestrColumn();
         ReestrColumn quantityReestrColumn = new QuantityReestrColumn();
+        ReestrColumn priceReestrColumn = new PriceReestrColumn();
+        ReestrColumn auctionTypeReestrColumn = new AuctionTypeReestrColumn();
 
 
         allColumns.add(nameReestrColumn);
@@ -36,6 +38,7 @@ public class ReestrColumns {
         allColumns.add(invNumReestrColumn);
 		allColumns.add(placeReestrColumn);
         allColumns.add(quantityReestrColumn);
+        allColumns.add(priceReestrColumn);
 
 
 		allColumns = Collections.unmodifiableList(allColumns); /// делаем полный список колонок неизменным во избежание
@@ -52,6 +55,8 @@ public class ReestrColumns {
 
 		// список неактивных полей
 		inactiveColumns = new ArrayList<ReestrColumn>();
+        inactiveColumns.add(priceReestrColumn);
+        inactiveColumns.add(auctionTypeReestrColumn);
 	}
 
 	public List<ReestrColumn> getAllColumns() {

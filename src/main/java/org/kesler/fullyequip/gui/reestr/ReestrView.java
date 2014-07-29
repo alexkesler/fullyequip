@@ -37,7 +37,7 @@ public class ReestrView extends JFrame {
 	private UnitsFilter selectedFilter = null;
 
 	public ReestrView(ReestrViewController controller, JFrame parentFrame) {
-		super("Реестр запросов");
+		super("Реестр оборудования");
 		this.controller = controller;
 		createGUI();
 
@@ -99,17 +99,25 @@ public class ReestrView extends JFrame {
 				filtersPopupMenu.show(addFilterButton, addFilterButton.getWidth(), 0);
 			}
 		});
-		// Пункт меню - добавление фильтра по дате открытия
+		// Пункт меню - добавление фильтра по размещению
 		JMenuItem placeFilterMenuItem = new JMenuItem("По размещению");
 		placeFilterMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 controller.addFilter(UnitsFiltersEnum.PLACE);
             }
         });
+        // Пункт меню - добавление фильтра по типу аукциона
+        JMenuItem auctionTypeMenuItem = new JMenuItem("По типу аукциона");
+        auctionTypeMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                controller.addFilter(UnitsFiltersEnum.AUCTION_TYPE);
+            }
+        });
 
 
         // собираем всплывающее меню добавления фильтра
 		filtersPopupMenu.add(placeFilterMenuItem);
+        filtersPopupMenu.add(auctionTypeMenuItem);
 
 		// кнопка реадктирования
 		JButton editFilterButton = new JButton();
