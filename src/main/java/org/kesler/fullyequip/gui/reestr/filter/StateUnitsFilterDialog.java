@@ -53,7 +53,7 @@ public class StateUnitsFilterDialog extends UnitsFilterDialog{
     protected void loadGUIDataFromUnitsFilter() {
         StateUnitsFilter placeUnitsFilter = (StateUnitsFilter) unitsFilter;
         this.filterStates = placeUnitsFilter.getStates();
-        PlacesModel.getInstance().readItemsFromDB();
+        UnitStatesModel.getInstance().readItemsFromDB();
         this.allStates = new HashSet<UnitState>(UnitStatesModel.getInstance().getAllItems());
 
         statesCheckBoxListModel.updatePlaces();

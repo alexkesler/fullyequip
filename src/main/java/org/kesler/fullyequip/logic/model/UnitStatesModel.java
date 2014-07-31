@@ -43,7 +43,7 @@ public class UnitStatesModel extends DefaultModel<UnitState> {
         log.info("Creating new initial UnitState");
         UnitState initialState = new UnitState();
 
-        initialState.setName("У поставщика");
+        initialState.setName("Исправное");
         initialState.setInitial(true);
 
 

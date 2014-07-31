@@ -3,6 +3,7 @@ package org.kesler.fullyequip.gui.main;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
+import org.kesler.fullyequip.logic.UnitState;
 import org.kesler.fullyequip.logic.UnitType;
 import org.kesler.fullyequip.util.ResourcesUtil;
 
@@ -240,12 +241,36 @@ class MainView extends JFrame {
                 }
             }
 
-            // заполняем оборудование по типам
+//            Map<SameUnit, DefaultMutableTreeNode> sameUnits = new HashMap<SameUnit, DefaultMutableTreeNode>();
+            Set<SameUnit> sameUnits = new HashSet<SameUnit>();
+            // выделяем аналогичное оборудовние
+            boolean fit;
             for (Unit unit:place.getUnits()) {
-                DefaultMutableTreeNode typeNode = unitTypesMap.get(unit.getType());
-                String unitString = unit.getName() + " - " + unit.getQuantity() + "шт.";
+                fit = false;
+                for (SameUnit sameUnit:sameUnits) {
+                    if (sameUnit.mergeUnit(unit)) {fit = true; break;}
+                }
+                if(!fit) {
+                    SameUnit sameUnit = new SameUnit(unit);
+                    sameUnits.add(sameUnit);
+                }
+            }
+
+
+            // заполняем оборудование по типам
+            for (SameUnit sameUnit:sameUnits) {
+                DefaultMutableTreeNode typeNode = unitTypesMap.get(sameUnit.getType());
+
+                String unitString = sameUnit.getName() + " - " + sameUnit.getQuantity() + "шт.(" + sameUnit.getState()+ ")";
                 typeNode.add(new DefaultMutableTreeNode(unitString));
             }
+//            // заполняем оборудование по типам
+//            for (Unit unit:place.getUnits()) {
+//                DefaultMutableTreeNode typeNode = unitTypesMap.get(unit.getType());
+//
+//                String unitString = unit.getName() + " - " + unit.getQuantity() + "шт.";
+//                typeNode.add(new DefaultMutableTreeNode(unitString));
+//            }
 
 
             root.add(placeNode);
@@ -254,5 +279,66 @@ class MainView extends JFrame {
         summaryTreeModel.reload();
     }
 
+    class SameUnit {
+        private UnitType type;
+        private String name;
+        private UnitState state;
+        private Long quantity;
+
+        SameUnit(Unit unit) {
+            type = unit.getType();
+            name = unit.getName();
+            state = unit.getState();
+            quantity = unit.getQuantity();
+        }
+
+        boolean mergeUnit(Unit unit) {
+            if (!type.equals(unit.getType())) return false;
+            if (!name.equals(unit.getName())) return false;
+            if (!state.equals(unit.getState())) return false;
+            quantity += unit.getQuantity();
+            return true;
+        }
+
+        public UnitType getType() {
+            return type;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public UnitState getState() {
+            return state;
+        }
+
+        public Long getQuantity() {
+            return quantity;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            SameUnit sameUnit = (SameUnit) o;
+
+            if (!name.equals(sameUnit.name)) return false;
+            if (quantity != null ? !quantity.equals(sameUnit.quantity) : sameUnit.quantity != null) return false;
+            if (!state.equals(sameUnit.state)) return false;
+            if (!type.equals(sameUnit.type)) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = type.hashCode();
+            result = 31 * result + name.hashCode();
+            result = 31 * result + state.hashCode();
+            result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
+            return result;
+        }
+    }
 
 }
