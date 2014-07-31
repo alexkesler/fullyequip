@@ -1,13 +1,18 @@
 package org.kesler.fullyequip.gui.main;
 
 import net.miginfocom.swing.MigLayout;
+import org.kesler.fullyequip.logic.Place;
+import org.kesler.fullyequip.logic.Unit;
+import org.kesler.fullyequip.logic.UnitType;
 import org.kesler.fullyequip.util.ResourcesUtil;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Главное окно программы
@@ -17,6 +22,7 @@ class MainView extends JFrame {
     private MainViewController controller;
 
     private JTree summaryTree;
+    private DefaultTreeModel summaryTreeModel;
 
     MainView(MainViewController controller) {
         super("Учет материальных средств");
@@ -178,6 +184,14 @@ class MainView extends JFrame {
             }
         });
 
+        JButton reloadTreeButton = new JButton("Обновить");
+        reloadTreeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.reloadTree();
+            }
+        });
+
         JButton placeEquipButton = new JButton("Оборудование");
         placeEquipButton.addActionListener(new ActionListener() {
             @Override
@@ -186,13 +200,16 @@ class MainView extends JFrame {
             }
         });
 
-        summaryTree = new JTree();
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Филиалы");
+        summaryTree = new JTree(rootNode);
+        summaryTreeModel = (DefaultTreeModel) summaryTree.getModel();
         JScrollPane summaryTreeScrollPane = new JScrollPane(summaryTree);
 
-        dataPanel.add(newUnitsButton, "span, split 4");
+        dataPanel.add(newUnitsButton, "span, split 5");
         dataPanel.add(newMoveButton);
         dataPanel.add(reportButton);
         dataPanel.add(placeEquipButton);
+        dataPanel.add(reloadTreeButton);
         dataPanel.add(summaryTreeScrollPane,"push,grow");
 
 
@@ -204,6 +221,37 @@ class MainView extends JFrame {
         setContentPane(mainPanel);
         setSize(700,500);
 
+    }
+
+    void reloadTree(Set<Place> places) {
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) summaryTreeModel.getRoot();
+        root.removeAllChildren();
+
+        for(Place place: places) {
+            DefaultMutableTreeNode placeNode = new DefaultMutableTreeNode(place.getName());
+            Map<UnitType,DefaultMutableTreeNode> unitTypesMap = new HashMap<UnitType,DefaultMutableTreeNode>();
+
+            // запоминаем все имеющиеся типы
+            for (Unit unit:place.getUnits()) {
+                if(!unitTypesMap.containsKey(unit.getType())) {
+                    DefaultMutableTreeNode typeNode = new DefaultMutableTreeNode(unit.getTypeName());
+                    unitTypesMap.put(unit.getType(), typeNode);
+                    placeNode.add(typeNode);
+                }
+            }
+
+            // заполняем оборудование по типам
+            for (Unit unit:place.getUnits()) {
+                DefaultMutableTreeNode typeNode = unitTypesMap.get(unit.getType());
+                String unitString = unit.getName() + " - " + unit.getQuantity() + "шт.";
+                typeNode.add(new DefaultMutableTreeNode(unitString));
+            }
+
+
+            root.add(placeNode);
+        }
+
+        summaryTreeModel.reload();
     }
 
 

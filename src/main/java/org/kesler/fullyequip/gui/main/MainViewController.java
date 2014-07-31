@@ -7,6 +7,10 @@ import org.kesler.fullyequip.gui.moving.MovingDialogController;
 import org.kesler.fullyequip.gui.reestr.ReestrViewController;
 import org.kesler.fullyequip.gui.report.ReportDialogController;
 import org.kesler.fullyequip.logic.*;
+import org.kesler.fullyequip.logic.model.PlacesModel;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Контроллер управления основным окном
@@ -94,4 +98,9 @@ public class MainViewController {
         ReestrViewController.getInstance().openView(view);
     }
 
+    void reloadTree() {
+        PlacesModel.getInstance().readItemsFromDB();
+        Set<Place> places = new HashSet<Place>(PlacesModel.getInstance().getAllItems());
+        view.reloadTree(places);
+    }
 }
