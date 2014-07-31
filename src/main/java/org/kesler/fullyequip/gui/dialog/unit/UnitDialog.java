@@ -121,8 +121,8 @@ class UnitDialog extends AbstractDialog {
         quantityTextField = new JFormattedTextField(new NumberFormatter(NumberFormat.getIntegerInstance()));
 
         equipPanel.add(new JLabel("Тип: "));
-        equipPanel.add(unitTypeComboBox);
-        equipPanel.add(editUnitTypesButton, "wrap");
+        equipPanel.add(unitTypeComboBox, "span, split 2");
+        equipPanel.add(editUnitTypesButton);
         equipPanel.add(new JLabel("Наименование: "));
         equipPanel.add(unitNameTextField, "wrap");
         equipPanel.add(new JLabel("Серийный номер: "));
@@ -149,7 +149,7 @@ class UnitDialog extends AbstractDialog {
             }
         });
 
-        statePanel.add(unitStateComboBox);
+        statePanel.add(unitStateComboBox, "span, split 2");
         statePanel.add(editUnitStatesButton);
 
         JPanel unitMovePanel = new JPanel(new MigLayout("fill"));

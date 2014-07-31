@@ -228,7 +228,7 @@ public class PlaceEquipDialog extends AbstractDialog{
                     if (unit.equals(checkableUnit.getUnit())) newCheckableUnit = checkableUnit;
                     break;
                 }
-                if (newCheckableUnit ==null) newCheckableUnit = new CheckableUnit(unit,false);
+                if (newCheckableUnit ==null) newCheckableUnit = new CheckableUnit(unit,false, unit.getQuantity());
                 newCheckableUnits.add(newCheckableUnit);
             }
             checkableUnits = newCheckableUnits;
@@ -248,9 +248,11 @@ public class PlaceEquipDialog extends AbstractDialog{
             return checkedUnits;
         }
 
+        List<CheckableUnit> getCheckableUnits() {return checkableUnits;}
+
         @Override
         public int getColumnCount() {
-            return 4;
+            return 6;
         }
 
         @Override
@@ -269,6 +271,12 @@ public class PlaceEquipDialog extends AbstractDialog{
                     break;
                 case 3:
                     name = "Ивентарный";
+                    break;
+                case 4:
+                    name = "Кол-во";
+                    break;
+                case 5:
+                    name = "Из";
                     break;
             }
 
@@ -290,6 +298,12 @@ public class PlaceEquipDialog extends AbstractDialog{
                 case 3:
                     width = 100;
                     break;
+                case 4:
+                    width = 50;
+                    break;
+                case 5:
+                    width = 50;
+                    break;
             }
 
             return width;
@@ -303,7 +317,7 @@ public class PlaceEquipDialog extends AbstractDialog{
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex==0;
+            return columnIndex==0||columnIndex==4;
         }
 
         @Override
@@ -331,6 +345,12 @@ public class PlaceEquipDialog extends AbstractDialog{
                 case 3:
                     return unit.getInvNumber();
 
+                case 4:
+                    return checkableUnit.getQuantity();
+
+                case 5:
+                    return unit.getQuantity();
+
             }
 
             return value;
@@ -341,6 +361,9 @@ public class PlaceEquipDialog extends AbstractDialog{
             super.setValueAt(aValue, rowIndex, columnIndex);
             if(columnIndex==0 && aValue instanceof Boolean) {
                 checkableUnits.get(rowIndex).setChecked((Boolean)aValue);
+            }
+            if(columnIndex==4 && aValue instanceof String) {
+                checkableUnits.get(rowIndex).setQuantity(Long.decode(aValue.toString()));
             }
         }
     }

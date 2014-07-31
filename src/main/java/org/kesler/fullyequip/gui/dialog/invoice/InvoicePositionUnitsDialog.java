@@ -116,8 +116,20 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
         Place initialPlace = placesModel.getInitialPlace();
         UnitStatesModel unitStatesModel = UnitStatesModel.getInstance();
         UnitState unitState = unitStatesModel.getInitialState();
-        if(invoicePosition.isInvReg() && invoicePosition.getUnits().size()==0) {
-            for(int i=0;i<invoicePosition.getQuantity();i++) {
+        if (invoicePosition.getUnits().size()==0) {
+            if(invoicePosition.isInvReg()) {
+                for(int i=0;i<invoicePosition.getQuantity();i++) {
+                    Unit unit = new Unit();
+                    unit.setInvoicePosition(invoicePosition);
+                    unit.setName(invoicePosition.getName());
+                    unit.setPrice(invoicePosition.getPrice());
+                    unit.setType(invoicePosition.getUnitType());
+                    unit.setPlace(initialPlace);
+                    unit.setState(unitState);
+                    unit.setQuantity(1L);
+                    invoicePosition.getUnits().add(unit);
+                }
+            } else {
                 Unit unit = new Unit();
                 unit.setInvoicePosition(invoicePosition);
                 unit.setName(invoicePosition.getName());
@@ -125,9 +137,10 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
                 unit.setType(invoicePosition.getUnitType());
                 unit.setPlace(initialPlace);
                 unit.setState(unitState);
-                unit.setQuantity(1L);
+                unit.setQuantity(invoicePosition.getQuantity());
                 invoicePosition.getUnits().add(unit);
             }
+
         }
     }
 
@@ -204,7 +217,7 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
 
         @Override
         public int getColumnCount() {
-            return 4;
+            return 5;
         }
 
         @Override
@@ -218,6 +231,8 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
                     return "Инв номер";
                 case 3:
                     return "Размещение";
+                case 4:
+                    return "Кол-во";
             }
             return "";
         }
@@ -234,6 +249,8 @@ public class InvoicePositionUnitsDialog extends AbstractDialog {
                     return unit.getInvNumber();
                 case 3:
                     return unit.getPlaceName();
+                case 4:
+                    return unit.getQuantity();
 
             }
             return null;
