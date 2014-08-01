@@ -12,6 +12,8 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +85,42 @@ public class PlaceEquipDialog extends AbstractDialog{
         for (int i=0; i< unitsTableModel.getColumnCount(); i++) {
             unitsTable.getColumnModel().getColumn(i).setPreferredWidth(unitsTableModel.getColumnWidth(i));
         }
+        unitsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                int col = unitsTable.columnAtPoint(e.getPoint());
+                if (col==0) {
+                    int row = unitsTable.rowAtPoint(e.getPoint());
+                    CheckableUnit checkableUnit = unitsTableModel.getCheckableUnitAt(row);
+                    if (checkableUnit.getChecked()&& checkableUnit.getQuantity() > 1) {
+                        String newQuantityString = JOptionPane.showInputDialog(currentDialog,
+                                "Ведите количество единиц оборудования",
+                                checkableUnit.getQuantity());
+                        if (newQuantityString==null) return;
+                        Long newQuantity = null;
+                        try {
+                            newQuantity = Long.decode(newQuantityString);
+                        } catch (NumberFormatException e1) {
+                            JOptionPane.showMessageDialog(currentDialog,
+                                    "Необходимо ввести число",
+                                    "Ошибка",
+                                    JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
+                        if (newQuantity > checkableUnit.getQuantity()) {
+                            JOptionPane.showMessageDialog(currentDialog,
+                                    "Число больше имеющихся в наличии",
+                                    "Ошибка",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        checkableUnit.setQuantity(newQuantity);
+                    }
+                }
+            }
+        });
 
         JScrollPane unitsTableScrollPane = new JScrollPane(unitsTable);
 
@@ -249,6 +287,8 @@ public class PlaceEquipDialog extends AbstractDialog{
         }
 
         List<CheckableUnit> getCheckableUnits() {return checkableUnits;}
+
+        CheckableUnit getCheckableUnitAt(int index) {return checkableUnits.get(index);}
 
         @Override
         public int getColumnCount() {
