@@ -1,4 +1,4 @@
-package org.kesler.fullyequip.gui.receive;
+package org.kesler.fullyequip.gui.equip;
 
 import org.kesler.fullyequip.logic.Unit;
 

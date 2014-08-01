@@ -3,7 +3,6 @@ package org.kesler.fullyequip.gui.moving;
 import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
-import org.kesler.fullyequip.gui.receive.CheckableUnit;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
 import org.kesler.fullyequip.util.ResourcesUtil;
