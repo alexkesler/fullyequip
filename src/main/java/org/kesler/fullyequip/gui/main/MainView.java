@@ -195,16 +195,28 @@ class MainView extends JFrame {
         JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
         JButton newUnitsButton = new JButton("Поступление");
-
-        JButton newMoveButton = new JButton("Перемещение");
-
-        JButton reportButton = new JButton("Отчеты");
-        reportButton.addActionListener(new ActionListener() {
+        newUnitsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.showReportDialog();
+                controller.showIncomeDialog();
             }
         });
+
+        JButton newMoveButton = new JButton("Перемещение");
+        newMoveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.showMovingDialog();
+            }
+        });
+
+//        JButton reportButton = new JButton("Отчеты");
+//        reportButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                controller.showReportDialog();
+//            }
+//        });
 
         JButton reloadTreeButton = new JButton("Обновить");
         reloadTreeButton.addActionListener(new ActionListener() {
@@ -214,23 +226,23 @@ class MainView extends JFrame {
             }
         });
 
-        JButton placeEquipButton = new JButton("Оборудование");
-        placeEquipButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.showPlaceEquipDialog();
-            }
-        });
+//        JButton placeEquipButton = new JButton("Оборудование");
+//        placeEquipButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                controller.showPlaceEquipDialog();
+//            }
+//        });
 
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Филиалы");
         summaryTree = new JTree(rootNode);
         summaryTreeModel = (DefaultTreeModel) summaryTree.getModel();
         JScrollPane summaryTreeScrollPane = new JScrollPane(summaryTree);
 
-        dataPanel.add(newUnitsButton, "span, split 5");
+        dataPanel.add(newUnitsButton, "span, split 3");
         dataPanel.add(newMoveButton);
-        dataPanel.add(reportButton);
-        dataPanel.add(placeEquipButton);
+//        dataPanel.add(reportButton);
+//        dataPanel.add(placeEquipButton);
         dataPanel.add(reloadTreeButton);
         dataPanel.add(summaryTreeScrollPane,"push,grow");
 
