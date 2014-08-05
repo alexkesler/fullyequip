@@ -1,6 +1,7 @@
 package org.kesler.fullyequip.gui.main;
 
 import org.kesler.fullyequip.gui.dialog.ListDialogController;
+import org.kesler.fullyequip.gui.options.OptionsDialog;
 import org.kesler.fullyequip.gui.receive.ContractEquipDialogController;
 import org.kesler.fullyequip.gui.equip.PlaceEquipDialogController;
 import org.kesler.fullyequip.gui.moving.MovingDialogController;
@@ -102,5 +103,10 @@ public class MainViewController {
         PlacesModel.getInstance().readItemsFromDB();
         Set<Place> places = new HashSet<Place>(PlacesModel.getInstance().getAllItems());
         view.reloadTree(places);
+    }
+
+    void showOptions() {
+        OptionsDialog optionsDialog = new OptionsDialog(view);
+        optionsDialog.showDialog();
     }
 }
