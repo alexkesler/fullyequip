@@ -36,7 +36,7 @@ public class MovingDialog extends AbstractDialog{
         super(parentFrame,"Перемещение", true);
         this.controller = controller;
         createGUI();
-        pack();
+        setSize(800,600);
         setLocationRelativeTo(parentFrame);
     }
 
@@ -276,7 +276,7 @@ public class MovingDialog extends AbstractDialog{
                     width = 100;
                     break;
                 case 4:
-                    width = 30;
+                    width = 50;
                     break;
                 case 5:
                     width = 150;
