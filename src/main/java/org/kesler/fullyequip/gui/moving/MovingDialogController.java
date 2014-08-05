@@ -6,6 +6,7 @@ import org.kesler.fullyequip.gui.equip.PlaceEquipDialogController;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
 import org.kesler.fullyequip.logic.model.PlacesModel;
+import org.kesler.fullyequip.logic.model.UnitsModel;
 
 import javax.swing.*;
 import java.util.Date;
@@ -20,11 +21,11 @@ public class MovingDialogController {
 
     private static MovingDialogController instance = null;
     private MovingDialog movingDialog;
-    private Set<Unit> units;
+    private Set<MovingUnit> movingUnits;
     private Place newPlace;
 
     private MovingDialogController() {
-        units = new HashSet<Unit>();
+        movingUnits = new HashSet<MovingUnit>();
     }
 
     public static synchronized MovingDialogController getInstance() {
@@ -43,6 +44,8 @@ public class MovingDialogController {
         movingDialog.setVisible(false);
         movingDialog.dispose();
         movingDialog = null;
+        movingUnits.clear();
+        newPlace = null;
     }
 
 
@@ -55,13 +58,13 @@ public class MovingDialogController {
         return newPlace;
     }
 
-    Set<Unit> getUnits() {
-        return units;
+    Set<MovingUnit> getMovingUnits() {
+        return movingUnits;
     }
 
     void addUnits() {
-        List<Unit> newUnits = PlaceEquipDialogController.getInstance().showSelectDialog(movingDialog);
-        units.addAll(newUnits);
+        List<MovingUnit> movingUnits = PlaceEquipDialogController.getInstance().showSelectDialog(movingDialog);
+        this.movingUnits.addAll(movingUnits);
         movingDialog.update();
     }
 
@@ -71,7 +74,7 @@ public class MovingDialogController {
 
 
     void removeUnit(Unit unit) {
-        units.remove(unit);
+        movingUnits.remove(unit);
     }
 
     void move() {
@@ -89,12 +92,23 @@ public class MovingDialogController {
 
         Date moveDate = movingDialog.getMovingDate();
 
+        // осуществляем перемещение
         if (confirmResult==JOptionPane.YES_OPTION) {
-            for (Unit unit : units) {
-                unit.moveTo(newPlace, moveDate);
+            for (MovingUnit movingUnit : movingUnits) {
+                if(movingUnit.getQuantity() == movingUnit.getAllQuantity()) {
+                    Unit unit = movingUnit.getUnit();
+                    unit.moveTo(newPlace,moveDate);
+                    UnitsModel.getInstance().saveOrUpdateItem(unit);
+                } else if (movingUnit.getQuantity() < movingUnit.getAllQuantity()) {
+                    Unit sourceUnit = movingUnit.getUnit();
+                    Unit resultUnit = sourceUnit.splitUnit(movingUnit.getQuantity());
+                    resultUnit.moveTo(newPlace,moveDate);
+                    movingUnit.setUnit(resultUnit);
+                    UnitsModel.getInstance().saveOrUpdateItem(sourceUnit);
+                    UnitsModel.getInstance().saveOrUpdateItem(resultUnit);
+                }
 
             }
-            PlacesModel.getInstance().saveOrUpdateItem(newPlace);
             movingDialog.update();
             JOptionPane.showMessageDialog(movingDialog, "Готово", "Сообщение", JOptionPane.INFORMATION_MESSAGE);
         }

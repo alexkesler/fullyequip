@@ -134,6 +134,38 @@ public class Unit extends AbstractEntity implements DictEntity{
         else return invoicePosition.getInvoice().getContract().getAuction().getType();
     }
 
+
+    public Unit splitUnit(Long splitQuantity) {
+        if (splitQuantity>=quantity) return null;
+
+        Unit splitUnit = new Unit();
+        splitUnit.setInvoicePosition(invoicePosition);
+        splitUnit.setType(type);
+        splitUnit.setPlace(place);
+        splitUnit.setName(name);
+        splitUnit.setInvReg(invReg);
+        splitUnit.setPrice(price);
+        splitUnit.setState(state);
+        copyMoves(splitUnit);
+
+        splitUnit.setQuantity(splitQuantity);
+
+        quantity -= splitQuantity;
+
+        return splitUnit;
+    }
+
+    private void copyMoves(Unit newUnit) {
+        for (UnitMove unitMove: moves) {
+            UnitMove newUnitMove = new UnitMove();
+            newUnitMove.setMoveDate(unitMove.getMoveDate());
+            newUnitMove.setPlace(unitMove.getPlace());
+            newUnitMove.setUnit(newUnit);
+
+            newUnit.getMoves().add(newUnitMove);
+        }
+    }
+
     @Override
     public String toString() {
         return name;

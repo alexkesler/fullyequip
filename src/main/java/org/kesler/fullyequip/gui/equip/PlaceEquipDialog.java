@@ -2,7 +2,7 @@ package org.kesler.fullyequip.gui.equip;
 
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
-import org.kesler.fullyequip.gui.receive.CheckableUnit;
+import org.kesler.fullyequip.gui.moving.MovingUnit;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
 import org.kesler.fullyequip.util.ResourcesUtil;
@@ -12,6 +12,8 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,8 +50,8 @@ public class PlaceEquipDialog extends AbstractDialog{
      * Возвращает выбранное оборудование
      * @return выбранные единицы оборудования
      */
-    List<Unit> getSelectedUnits() {
-        return unitsTableModel.getCheckedUnits();
+    List<MovingUnit> getSelectedMovingUnits() {
+        return unitsTableModel.getCheckedMovingUnits();
     }
 
     private void createGUI() {
@@ -83,6 +85,42 @@ public class PlaceEquipDialog extends AbstractDialog{
         for (int i=0; i< unitsTableModel.getColumnCount(); i++) {
             unitsTable.getColumnModel().getColumn(i).setPreferredWidth(unitsTableModel.getColumnWidth(i));
         }
+        unitsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                int col = unitsTable.columnAtPoint(e.getPoint());
+                if (col==0) {
+                    int row = unitsTable.rowAtPoint(e.getPoint());
+                    CheckableUnit checkableUnit = unitsTableModel.getCheckableUnitAt(row);
+                    if (checkableUnit.getChecked()&& checkableUnit.getQuantity() > 1) {
+                        String newQuantityString = JOptionPane.showInputDialog(currentDialog,
+                                "Ведите количество единиц оборудования",
+                                checkableUnit.getQuantity());
+                        if (newQuantityString==null) return;
+                        Long newQuantity = null;
+                        try {
+                            newQuantity = Long.decode(newQuantityString);
+                        } catch (NumberFormatException e1) {
+                            JOptionPane.showMessageDialog(currentDialog,
+                                    "Необходимо ввести число",
+                                    "Ошибка",
+                                    JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
+                        if (newQuantity > checkableUnit.getQuantity()) {
+                            JOptionPane.showMessageDialog(currentDialog,
+                                    "Число больше имеющихся в наличии",
+                                    "Ошибка",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        checkableUnit.setQuantity(newQuantity);
+                    }
+                }
+            }
+        });
 
         JScrollPane unitsTableScrollPane = new JScrollPane(unitsTable);
 
@@ -228,7 +266,7 @@ public class PlaceEquipDialog extends AbstractDialog{
                     if (unit.equals(checkableUnit.getUnit())) newCheckableUnit = checkableUnit;
                     break;
                 }
-                if (newCheckableUnit ==null) newCheckableUnit = new CheckableUnit(unit,false);
+                if (newCheckableUnit ==null) newCheckableUnit = new CheckableUnit(unit,false, unit.getQuantity());
                 newCheckableUnits.add(newCheckableUnit);
             }
             checkableUnits = newCheckableUnits;
@@ -239,18 +277,27 @@ public class PlaceEquipDialog extends AbstractDialog{
          * Вычисляет отмеченные юниты
          * @return отмеченные юниты
          */
-        List<Unit> getCheckedUnits() {
-            List<Unit> checkedUnits = new ArrayList<Unit>();
+        List<MovingUnit> getCheckedMovingUnits() {
+            List<MovingUnit> checkedUnits = new ArrayList<MovingUnit>();
             for(CheckableUnit checkableUnit: checkableUnits) {
-                if(checkableUnit.getChecked()) checkedUnits.add(checkableUnit.getUnit());
+                if(checkableUnit.getChecked()) {
+                    MovingUnit movingUnit = new MovingUnit();
+                    movingUnit.setUnit(checkableUnit.getUnit());
+                    movingUnit.setQuantity(checkableUnit.getQuantity());
+                    checkedUnits.add(movingUnit);
+                }
+
+
             }
 
             return checkedUnits;
         }
 
+        CheckableUnit getCheckableUnitAt(int index) {return checkableUnits.get(index);}
+
         @Override
         public int getColumnCount() {
-            return 4;
+            return 6;
         }
 
         @Override
@@ -269,6 +316,12 @@ public class PlaceEquipDialog extends AbstractDialog{
                     break;
                 case 3:
                     name = "Ивентарный";
+                    break;
+                case 4:
+                    name = "Кол-во";
+                    break;
+                case 5:
+                    name = "Из";
                     break;
             }
 
@@ -290,6 +343,12 @@ public class PlaceEquipDialog extends AbstractDialog{
                 case 3:
                     width = 100;
                     break;
+                case 4:
+                    width = 50;
+                    break;
+                case 5:
+                    width = 50;
+                    break;
             }
 
             return width;
@@ -303,7 +362,7 @@ public class PlaceEquipDialog extends AbstractDialog{
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex==0;
+            return columnIndex==0||columnIndex==4;
         }
 
         @Override
@@ -331,6 +390,12 @@ public class PlaceEquipDialog extends AbstractDialog{
                 case 3:
                     return unit.getInvNumber();
 
+                case 4:
+                    return checkableUnit.getQuantity();
+
+                case 5:
+                    return unit.getQuantity();
+
             }
 
             return value;
@@ -341,6 +406,9 @@ public class PlaceEquipDialog extends AbstractDialog{
             super.setValueAt(aValue, rowIndex, columnIndex);
             if(columnIndex==0 && aValue instanceof Boolean) {
                 checkableUnits.get(rowIndex).setChecked((Boolean)aValue);
+            }
+            if(columnIndex==4 && aValue instanceof String) {
+                checkableUnits.get(rowIndex).setQuantity(Long.decode(aValue.toString()));
             }
         }
     }

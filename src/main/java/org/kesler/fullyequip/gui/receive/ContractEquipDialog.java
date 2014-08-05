@@ -249,17 +249,10 @@ public class ContractEquipDialog extends AbstractDialog {
             JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано", "Ошибка", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if (selectedInvoicePosition.isInvReg()) {
-            InvoicePositionUnitsDialog invoicePositionUnitsDialog = new InvoicePositionUnitsDialog(currentDialog,selectedInvoicePosition);
-            invoicePositionUnitsDialog.setVisible(true);
-            updateInvoicePositions();
-        } else {
-            InvoicePositionDialog invoicePositionDialog = new InvoicePositionDialog(currentDialog, selectedInvoicePosition);
-            invoicePositionDialog.setVisible(true);
-            if(invoicePositionDialog.getResult() == InvoicePositionDialog.OK) {
-                updateInvoicePositions();
-            }
-        }
+
+        InvoicePositionUnitsDialog invoicePositionUnitsDialog = new InvoicePositionUnitsDialog(currentDialog,selectedInvoicePosition);
+        invoicePositionUnitsDialog.setVisible(true);
+        updateInvoicePositions();
 
     }
 

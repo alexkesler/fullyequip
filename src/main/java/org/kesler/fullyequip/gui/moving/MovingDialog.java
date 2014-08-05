@@ -3,7 +3,6 @@ package org.kesler.fullyequip.gui.moving;
 import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
-import org.kesler.fullyequip.gui.receive.CheckableUnit;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
 import org.kesler.fullyequip.util.ResourcesUtil;
@@ -142,7 +141,7 @@ public class MovingDialog extends AbstractDialog{
     void update() {
         Place place = controller.getNewPlace();
         newPlaceLabel.setText(place == null ? "Не опр" : place.toString());
-        unitsTableModel.setUnits(controller.getUnits());
+        unitsTableModel.setMovingUnits(controller.getMovingUnits());
     }
 
     private void addUnits() {
@@ -176,24 +175,24 @@ public class MovingDialog extends AbstractDialog{
 
     class UnitsTableModel extends AbstractTableModel {
 
-        private List<Unit> units;
+        private List<MovingUnit> movingUnits;
 
         UnitsTableModel() {
-            units = new ArrayList<Unit>();
+            movingUnits = new ArrayList<MovingUnit>();
         }
 
-        public void setUnits(Collection<Unit> units) {
-            this.units = new ArrayList<Unit>(units);
+        public void setMovingUnits(Collection<MovingUnit> movingUnits) {
+            this.movingUnits = new ArrayList<MovingUnit>(movingUnits);
             fireTableDataChanged();
         }
 
         Unit getUnitAt(int index) {
-            return units.get(index);
+            return movingUnits.get(index).getUnit();
         }
 
         @Override
         public int getRowCount() {
-            return units.size();
+            return movingUnits.size();
         }
 
         @Override
@@ -205,7 +204,8 @@ public class MovingDialog extends AbstractDialog{
         public Object getValueAt(int rowIndex, int columnIndex) {
             Object value = null;
 
-            Unit unit = units.get(rowIndex);
+            MovingUnit movingUnit = movingUnits.get(rowIndex);
+            Unit unit = movingUnit.getUnit();
 
             switch (columnIndex) {
                 case 0:
@@ -221,7 +221,7 @@ public class MovingDialog extends AbstractDialog{
                     value = unit.getInvNumber();
                     break;
                 case 4:
-                    value = unit.getQuantity();
+                    value = movingUnit.getQuantity();
                     break;
                 case 5:
                     value = unit.getPlace().getName();
