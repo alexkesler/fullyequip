@@ -155,6 +155,15 @@ class MainView extends JFrame {
 
         JMenu optionsMenu = new JMenu("Настройки");
 
+        JMenuItem optionsMenuItem = new JMenuItem("Подключение");
+        optionsMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.showOptions();
+            }
+        });
+
+        optionsMenu.add(optionsMenuItem);
 
         JMenu aboutMenu = new JMenu("О программе");
 
