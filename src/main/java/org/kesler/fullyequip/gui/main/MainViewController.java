@@ -1,5 +1,6 @@
 package org.kesler.fullyequip.gui.main;
 
+import org.kesler.fullyequip.gui.about.AboutDialog;
 import org.kesler.fullyequip.gui.dialog.ListDialogController;
 import org.kesler.fullyequip.gui.options.OptionsDialog;
 import org.kesler.fullyequip.gui.receive.ContractEquipDialogController;
@@ -108,5 +109,10 @@ public class MainViewController {
     void showOptions() {
         OptionsDialog optionsDialog = new OptionsDialog(view);
         optionsDialog.showDialog();
+    }
+
+    void showAbout() {
+        AboutDialog aboutDialog = new AboutDialog(view);
+        aboutDialog.showDialog();
     }
 }

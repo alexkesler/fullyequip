@@ -8,6 +8,8 @@ import org.kesler.fullyequip.logic.UnitType;
 import org.kesler.fullyequip.util.ResourcesUtil;
 
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
@@ -165,15 +167,25 @@ class MainView extends JFrame {
 
         optionsMenu.add(optionsMenuItem);
 
-        JMenu aboutMenu = new JMenu("О программе");
 
+        JMenu helpMenu = new JMenu("Справка");
+
+        JMenuItem aboutMenuItem = new JMenuItem("О программе");
+        aboutMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.showAbout();
+            }
+        });
+
+        helpMenu.add(aboutMenuItem);
 
 
         menuBar.add(taskMenu);
         menuBar.add(dictMenu);
         menuBar.add(reportMenu);
         menuBar.add(optionsMenu);
-        menuBar.add(aboutMenu);
+        menuBar.add(helpMenu);
 
         setJMenuBar(menuBar);
 
