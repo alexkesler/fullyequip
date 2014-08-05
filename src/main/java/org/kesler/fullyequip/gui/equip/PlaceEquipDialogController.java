@@ -1,6 +1,7 @@
 package org.kesler.fullyequip.gui.equip;
 
 import org.kesler.fullyequip.gui.dialog.ListDialogController;
+import org.kesler.fullyequip.gui.moving.MovingUnit;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
 
@@ -41,15 +42,15 @@ public class PlaceEquipDialogController {
      * @param parentFrame родительское окно
      * @return список выбранного оборудования
      */
-    public List<Unit> showSelectDialog(JFrame parentFrame) {
-        List<Unit> units = new ArrayList<Unit>();
+    public List<MovingUnit> showSelectDialog(JFrame parentFrame) {
+        List<MovingUnit> movingUnits = new ArrayList<MovingUnit>();
         dialog = new PlaceEquipDialog(parentFrame, this);
         dialog.setVisible(true);
         if(dialog.getResult()==PlaceEquipDialog.OK) {
-            units = dialog.getSelectedUnits();
+            movingUnits = dialog.getSelectedMovingUnits();
         }
 
-        return units;
+        return movingUnits;
     }
 
     /**
@@ -57,15 +58,15 @@ public class PlaceEquipDialogController {
      * @param parentDialog родительский диалог
      * @return список выбранного оборудования
      */
-    public List<Unit> showSelectDialog(JDialog parentDialog) {
-        List<Unit> units = new ArrayList<Unit>();
+    public List<MovingUnit> showSelectDialog(JDialog parentDialog) {
+        List<MovingUnit> movingUnits = new ArrayList<MovingUnit>();
         dialog = new PlaceEquipDialog(parentDialog, this);
         dialog.setVisible(true);
         if(dialog.getResult()==PlaceEquipDialog.OK) {
-            units = dialog.getSelectedUnits();
+            movingUnits = dialog.getSelectedMovingUnits();
         }
 
-        return units;
+        return movingUnits;
     }
 
 

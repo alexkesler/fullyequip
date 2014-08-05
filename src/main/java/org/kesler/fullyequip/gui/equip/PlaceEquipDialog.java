@@ -2,6 +2,7 @@ package org.kesler.fullyequip.gui.equip;
 
 import net.miginfocom.swing.MigLayout;
 import org.kesler.fullyequip.gui.dialog.AbstractDialog;
+import org.kesler.fullyequip.gui.moving.MovingUnit;
 import org.kesler.fullyequip.logic.Place;
 import org.kesler.fullyequip.logic.Unit;
 import org.kesler.fullyequip.util.ResourcesUtil;
@@ -49,8 +50,8 @@ public class PlaceEquipDialog extends AbstractDialog{
      * Возвращает выбранное оборудование
      * @return выбранные единицы оборудования
      */
-    List<Unit> getSelectedUnits() {
-        return unitsTableModel.getCheckedUnits();
+    List<MovingUnit> getSelectedMovingUnits() {
+        return unitsTableModel.getCheckedMovingUnits();
     }
 
     private void createGUI() {
@@ -276,16 +277,21 @@ public class PlaceEquipDialog extends AbstractDialog{
          * Вычисляет отмеченные юниты
          * @return отмеченные юниты
          */
-        List<Unit> getCheckedUnits() {
-            List<Unit> checkedUnits = new ArrayList<Unit>();
+        List<MovingUnit> getCheckedMovingUnits() {
+            List<MovingUnit> checkedUnits = new ArrayList<MovingUnit>();
             for(CheckableUnit checkableUnit: checkableUnits) {
-                if(checkableUnit.getChecked()) checkedUnits.add(checkableUnit.getUnit());
+                if(checkableUnit.getChecked()) {
+                    MovingUnit movingUnit = new MovingUnit();
+                    movingUnit.setUnit(checkableUnit.getUnit());
+                    movingUnit.setQuantity(checkableUnit.getQuantity());
+                    checkedUnits.add(movingUnit);
+                }
+
+
             }
 
             return checkedUnits;
         }
-
-        List<CheckableUnit> getCheckableUnits() {return checkableUnits;}
 
         CheckableUnit getCheckableUnitAt(int index) {return checkableUnits.get(index);}
 
